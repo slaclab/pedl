@@ -8,5 +8,8 @@ htmlcov
 #Vim
 *.swp
 
+#SVN
+.svn
+
 #Sphinx
 docs/build
