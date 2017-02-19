@@ -1,7 +1,7 @@
 import numpy as np
 from .errors import DimensionError
 
-class Widget:
+class PedlObject:
     """
     Basic Widget Class
 
@@ -128,6 +128,21 @@ class Widget:
         return (self.x+self.w/2, self.y + self.h/2)
 
 
+    @property
+    def bottom(self):
+        """
+        Position of the bottom of the widget
+        """
+        return self.y + self.h
+
+    @property
+    def right(self):
+        """
+        Right side of the widget
+        """
+        return self.x+ self.w
+
+
     def place_bottom(self, y):
         """
         Place the bottom of the widget at a certain height
@@ -144,13 +159,51 @@ class Widget:
         return self.x
 
 
-    def place_center(self, x, y):
+    def recenter(self, x=None,, y=None):
         """
         Place the center of the widget at a x,y position
         """
-        self.x, self.y = x-self.w/2, y-self.y/2
+        if x:
+            self.x = x - self.w/2
+        if y:
+            self.y = y - self.y/2
+
         return self.x, self.y
 
+
+    def _set_property(self, value, dtype=None):
+            if dtype and not isinstance(value, dtype):
+                value = dtype(value)
+
+            return value
+
+
+class Widget(PedlObject):
+    
+    
+    def fill(self):
+        """
+        Background fill in the Widget, if set to None, the display background
+        is used. Otherwise this should be a named color provided in the
+        :class:`.ColorChoice` or if the color you want is unavailable an
+        integer in ``(0,94)`` specifying the index of the desired color 
+        """
+        return self._fill
+
+
+    @fill.setter
+    def fill(self, value):
+        if isinstance(value, NoneType):
+            self._fill = value
+
+        elif value in ColorChoice:
+            self._fill = value
+
+        elif value in range(0,94):
+            self._fill = int(value)
+
+        else:
+            self._fill = ColorChoice(value)
 
     @property
     def _fill_index(self):
@@ -165,9 +218,3 @@ class Widget:
 
         else:
             return self._fill
-
-    def _set_property(self, value, dtype=None):
-            if dtype and not isinstance(value, dtype):
-                value = dtype(value)
-
-            return value
