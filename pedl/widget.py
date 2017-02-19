@@ -130,7 +130,7 @@ class Widget:
 
     def place_bottom(self, y):
         """
-        Place the bottom of the widget at a  certain height
+        Place the bottom of the widget at a certain height
         """
         self.y = y - self.h
         return self.y
@@ -138,10 +138,18 @@ class Widget:
     
     def place_right(self, x):
         """
-        Place the bottom of the widget at a  certain height
+        Place the bottom of the widget at a certain height
         """
         self.x = x - self.w
         return self.x
+
+
+    def place_center(self, x, y):
+        """
+        Place the center of the widget at a x,y position
+        """
+        self.x, self.y = x-self.w/2, y-self.y/2
+        return self.x, self.y
 
 
     @property

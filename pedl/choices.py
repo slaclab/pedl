@@ -25,7 +25,8 @@ class AlignmentChoice(Enum):
     Left   = 'left'
     Center = 'center'
     Right  = 'right'
-
+    Bottom = 'bottom'
+    Top    = 'top'
 
 class FontChoice(Enum):
     Helvetica             = 'helvetica'
