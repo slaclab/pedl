@@ -7,28 +7,21 @@ class PedlObject:
 
     Parameters
     ----------
-    name   :
+    name   : str , optional
+        Alias of Widget
 
-    parent :
-
-    x : int
+    x : int, optional
         Horizontal Position
 
-    y : int
+    y : int, optional
         Vertical Position
 
-    w : int
+    w : int, optional
         Width
 
-    h : int
+    h : int, optional
         Height
     """
-    #Default Widget Info
-    obj      = 'WidgetClass'
-    minor    = 1
-    release  = 1
-    template = 'widget.edl'
-
     def __init__(name=None, **kwargs):
 
         #Environment Variables 
@@ -180,7 +173,23 @@ class PedlObject:
 
 class Widget(PedlObject):
     
-    
+    #Default Widget Info
+    minor    = 1
+    release  = 1
+    template = 'widget.edl'
+    obj      = None
+
+
+    visibility = Visibility()
+
+    @property
+    def vanishing(self):
+        """
+        Whether or not valid visibility information has been entered
+        """
+        return self.visibility.valid
+
+
     def fill(self):
         """
         Background fill in the Widget, if set to None, the display background
@@ -205,16 +214,3 @@ class Widget(PedlObject):
         else:
             self._fill = ColorChoice(value)
 
-    @property
-    def _fill_index(self):
-        """
-        Formatted index call for EDL file
-        """
-        if not self._fill:
-            return False
-
-        elif isinstance(self._fill, ColorChoice):
-            return self._fill.value
-
-        else:
-            return self._fill

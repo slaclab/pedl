@@ -10,4 +10,7 @@ w {{widget.w}}
 h {{widget.h}}
 {% if widget.fill %}fill
 fillColor {{widget.fill}}{% endif %}
+{% if widget.vanishing %} visPv {{widget.visibility.pv}}
+{% if widget.visibility.max }visMax {{widget.visibility.max}}{% endif %}
+{% if widget.visibility.min }visMin {{widget.visibility.min}}{% endif %}{% endif %}
 {% block properties %}{% endblock %}endObjectProperties
