@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 class Visibility:
     """
     Visibility Settings for Widget

@@ -22,19 +22,22 @@ class PedlObject:
     h : int, optional
         Height
     """
-    def __init__(name=None, **kwargs):
+    _x = 0.
+    _y = 0.
+    _w = 0.
+    _h = 0.
+    def __init__(self, name=None, **kwargs):
 
         #Environment Variables 
         if not name:
             name = self.obj
 
         self.name   = name
-
         #Set Dimensions
         for dimension in ('x','y','w','h'):
             if dimension in kwargs:
                 setattr(self,
-                        '_{}'.format(dimension),
+                        dimension,
                         kwargs[dimension])
 
         self._fill = None
@@ -180,7 +183,12 @@ class Widget(PedlObject):
     obj      = None
 
 
-    visibility = Visibility()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        #Visibility Info
+        self.visibility = Visibility()
+
 
     @property
     def vanishing(self):
