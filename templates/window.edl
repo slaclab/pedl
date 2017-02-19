@@ -1,0 +1,22 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 0
+y 0
+w {{width}}
+h {{height}}
+font "{{font}}"
+ctlFont "{{font}}"
+btnFont "{{font}}"
+fgColor
+bgColor
+textColor
+topShadowColor
+botShadowColor
+title "{{title}}"
+showGrid
+snapToGrid
+gridSize 4
+endScreenProperties

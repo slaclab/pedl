@@ -1,0 +1,13 @@
+# ({{widget.name}})
+object {{widget.obj}}
+beginObjectProperties
+major 4
+minor {{widget.minor}}
+release {{widget.release}}
+x {{widget.x}}
+y {{widget.y}}
+w {{widget.w}}
+h {{widget.h}}
+{% if widget.fill %}fill
+fillColor {{widget.fill}}{% endif %}
+{% block properties %}{% endblock %}endObjectProperties

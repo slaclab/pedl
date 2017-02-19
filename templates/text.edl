@@ -1,0 +1,11 @@
+{% extends 'widget.edl' %}
+{% block properties %}
+font "new century schoolbook-bold-i-8.0"
+fgColor index 23
+bgColor index 0
+useDisplayBg
+value {
+  "{{text}}"
+}
+autoSize
+{% endblock %}
