@@ -1,0 +1,5 @@
+{% extends 'widget.edl' %}
+{% block properties %}
+lineWidth {{widget.lineColor.lineWidth}}
+lineColor index {{widget.lineColor.value}}
+{% endblock %}
