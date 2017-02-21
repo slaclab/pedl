@@ -1,10 +1,10 @@
 import logging
-from .widget  import Widget
+from .widget  import PedlObject
 from .choices import AlignmentChoice
 
 logger = logging.getLogger(__name__)
 
-class Layout(Widget):
+class Layout(PedlObject):
 
     alignment = None
 
@@ -86,7 +86,7 @@ class Layout(Widget):
         pass
 
 
-class HorizontalLayout(Layout):
+class HBoxLayout(Layout):
 
     alignment = AlignmentChoice.Top
 
@@ -105,14 +105,14 @@ class HorizontalLayout(Layout):
         else:
             logger.warning('Unrecognized alignment {}'.format(self.alignment))
 
-        next_widget = 0.
+        next_widget = self.x 
 
         for widget in self.widgets:
             widget.x = next_widget
             next_widget += widget.w + self.spacing
 
 
-class VerticalLayout(Layout):
+class VBoxLayout(Layout):
     
     def _rearrange(self):
         if self.alignment == AlignmentChoice.Left:
@@ -129,7 +129,7 @@ class VerticalLayout(Layout):
         else:
             logger.warning('Unrecognized alignment {}'.format(self.alignment))
 
-        next_widget = 0.
+        next_widget = self.y
 
         for widget in self.widgets:
             widget.y = next_widget
