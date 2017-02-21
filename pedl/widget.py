@@ -3,7 +3,7 @@ from .errors import DimensionError
 
 class PedlObject:
     """
-    Basic Widget Class
+    Basic PEDL Class
 
     Parameters
     ----------
@@ -94,7 +94,7 @@ class PedlObject:
     def fill(self):
         """
         Background fill in the Widget, if set to None, the display background
-        is used. Otherwise this should be a named color provided in the
+        is used. Otherwise this should be a named color provided in 
         :class:`.ColorChoice` or if the color you want is unavailable an
         integer in ``(0,94)`` specifying the index of the desired color 
         """
@@ -155,7 +155,7 @@ class PedlObject:
         return self.x
 
 
-    def recenter(self, x=None,, y=None):
+    def recenter(self, x=None, y=None):
         """
         Place the center of the widget at a x,y position
         """
@@ -175,7 +175,24 @@ class PedlObject:
 
 
 class Widget(PedlObject):
-    
+    """
+    Parameters
+    ----------
+    name   : str , optional
+        Alias of Widget
+
+    x : int, optional
+        Horizontal Position
+
+    y : int, optional
+        Vertical Position
+
+    w : int, optional
+        Width
+
+    h : int, optional
+        Height
+    """
     #Default Widget Info
     minor    = 1
     release  = 1
@@ -198,6 +215,7 @@ class Widget(PedlObject):
         return self.visibility.valid
 
 
+    @property
     def fill(self):
         """
         Background fill in the Widget, if set to None, the display background
