@@ -1,7 +1,6 @@
 import math
 from enum import Enum
 
-from .widget  import Choice
 from .choices import FontChoice
 
 class Font:
@@ -68,7 +67,7 @@ class Font:
     def italicized(self, value):
         self._italic = bool(value)
 
-
+    @property
     def font(self):
         """
         Choice of font
@@ -77,7 +76,7 @@ class Font:
 
     @font.setter
     def font(self, value):
-        return self._font = FontChoice(value)
+        self._font = FontChoice(value)
 
     @property
     def size(self):
