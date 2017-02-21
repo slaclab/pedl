@@ -25,16 +25,13 @@ class Designer:
     Attributes
     ----------
     widgets : list
+        Ordered list of widgets loaded into designer
 
     env : ``jinja2.Environment``
-
-    width
-
-    height
-
+        Environment used to render templates
     """
-    width  = 750
-    height = 1100
+    _w = 750
+    _h = 1100
 
     def __init__(self, template_dir=None):
 
@@ -48,8 +45,33 @@ class Designer:
         if not os.path.exists(template_dir):
             raise FileNotFoundError('No such directory {}'.format(template_dir))
 
+        logger.debug('Using {} as template directory ...'.format(template_dir))
+
         self.env = Environment(loader=FileSystemLoader(template_dir))
 
+
+    @property
+    def w(self):
+        """
+        Width of screen
+        """
+        return self.w
+
+    @w.setter
+    def w(self, value):
+        self._w = int(w)
+
+
+    @property
+    def h(self):
+        """
+        Height of screen
+        """
+        return self.h
+
+    @h.setter
+    def h(self, value):
+        self._h = int(h)
 
 
     @property
@@ -112,18 +134,31 @@ class Designer:
 
         Returns
         -------
+        edl : str
+            Text that will be put into the edl file
         """
-        if not isinstance(widget, Widget):
-            raise TypeError('Must supply a Widget object')
+        edl = ''
 
-        try:
-            template = self.env.get_template(widget.template)
+        if isinstance(obj, Widget):
+            widgets = [widget]
 
-        except TemplateNotFound:
-            raise WidgetError('Widget {} has non-existant template {}'
-                              ''.format(widget.name, widget.template))
+        elif isinstance(obj, Layout):
+            widgets = obj.widgets
 
-        return template.render(widget=widget)
+        for widget in widgets:
+            logger.debug('Rendering widget {} ...'.format(widget.name))
+            try:
+
+                template = self.env.get_template(widget.template)
+                logger.debug('Using template {} ...'.format(template.filename))
+
+            except TemplateNotFound:
+                raise WidgetError('Widget {} has non-existant template {}'
+                                  ''.format(widget.name, widget.template))
+
+            edl += template.render(widget=widget)
+
+        return edl
 
 
     def show(self, wd=None, wait=True, **kwargs):
@@ -143,7 +178,7 @@ class Designer:
 
         Returns
         -------
-        proc : ``subprocess.Popen`
+        proc : ``subprocess.Popen``
             Process containing EDM launch
 
         See Also
@@ -188,7 +223,7 @@ class Designer:
         wd : str, optional
             Working directory to launch screen, otherwise the current directory
             is used
-        
+
         wait : bool, optional
             Block the main thread while the EDM preview is open
 
@@ -197,7 +232,7 @@ class Designer:
 
         Returns
         -------
-        proc : ``subprocess.Popen`
+        proc : ``subprocess.Popen``
             Process containing EDM launch
 
         Raises
@@ -243,8 +278,8 @@ class Designer:
             print('Preview aborted ...')
 
         return proc
-    
-    
+
+
     def _create(self,f, title=None):
         """
         Draw the EDL screen
