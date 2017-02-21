@@ -7,11 +7,11 @@ logger = logging.getLogger(__name__)
 class Layout(PedlObject):
 
     alignment = None
-
-    def __init__(self,x=0, y=0, spacing=5):
+    
+    _spacing = 5
+    def __init__(self,x=0, y=0):
         super().__init__(x=x,y=y)
         self.widgets = list()
-        self.spacing = spacing
 
 
     @property
@@ -134,3 +134,43 @@ class VBoxLayout(Layout):
         for widget in self.widgets:
             widget.y = next_widget
             next_widget += widget.h + self.spacing
+
+
+class Stack(Layout):
+
+    _spacing = None
+
+    _alignment = AlignmentChoice.Center
+
+    def _rearrange(self):
+        ld = self.widgets[0]
+
+        for widget in self.widgets:
+
+            if self.alignment == AlignmentChoice.Left:
+                w.x = ld.x
+                w.recenter(y=ld.center[1])
+
+            elif self.alignment == AlignmentChoice.Right:
+                w.place_right(x=ld.right)
+                w.recenter(y=ld.center[1])
+
+             elif self.alignment == AlignmentChoice.Top:
+                w.recenter(x=ld.center[0])
+                w.y = ld.y
+
+            elif self.alignment == AlignmentChoice.Bottom:
+                w.recenter(x=ld.center[0])
+                w.place_bottom(y=ld.bottom)
+
+            elif self.alignment == AlignmentChoice.Center:
+                w.recenter(ld.center)
+
+            else:
+                logger.warning('Unrecognized alignment {}'.format(self.alignment))
+
+
+    @spacing.setter
+    def spacing(self, value):
+        raise NotImplementedError
+
