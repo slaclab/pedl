@@ -1,5 +1,5 @@
 import numpy as np
-from .errors import DimensionError
+from .choices import ColorChoice
 
 class PedlObject:
     """
@@ -176,6 +176,9 @@ class PedlObject:
 
 class Widget(PedlObject):
     """
+    The basic Widget that all others inherit from, defining positiong and fill
+    coloring settings
+
     Parameters
     ----------
     name   : str , optional
@@ -192,13 +195,21 @@ class Widget(PedlObject):
 
     h : int, optional
         Height
+    
+    Attributes
+    ----------
+    visibility : :class:`.Visibility`
+        Visibility Settings for Widget
     """
+
     #Default Widget Info
     minor    = 1
     release  = 1
     template = 'widget.edl'
     obj      = None
 
+    _fill    = None
+    _colorPV = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -213,6 +224,17 @@ class Widget(PedlObject):
         Whether or not valid visibility information has been entered
         """
         return self.visibility.valid
+
+    @property
+    def colorPV(self):
+        """
+        Color PV to change fill based on different statuses
+        """
+        return self._colorPV
+
+    @colorPV.setter
+    def colorPV(self, value):
+        self._colorPV = value
 
 
     @property

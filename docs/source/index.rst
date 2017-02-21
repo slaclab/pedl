@@ -8,6 +8,11 @@ PEDL
 
 .. toctree::
    :maxdepth: 1
-   :caption: Designing Screens:
+   :caption: Screen Design
 
+.. toctree::
+   :maxdepth: 1
+   :caption: Widget Options
+   
    widget.rst
+   choices.rst

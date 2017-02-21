@@ -1,6 +1,9 @@
 Basic Widget
 ============
 
-.. autoclass:: pedl.widget.Widget
+.. autoclass:: pedl.Widget
    :members:
    :inherited-members:
+
+.. autoclass:: pedl.Visibility
+   :members:

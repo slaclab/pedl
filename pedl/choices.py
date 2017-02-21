@@ -1,7 +1,15 @@
+"""
+In order to represent EDM properties that are restricted to a specific set of
+values, PEDL will have a corresponding ``Choice`` object. These are  Python ``Enum``
+types, that wrap the underlying EDM property options with conveinent, tab
+accessible attributes
+"""
 from enum import Enum
 
 class ColorChoice(Enum):
-
+    """
+    Choices of Color available in EDM
+    """
     White  = 0
     Grey   = 4
     Black  = 14
@@ -22,6 +30,9 @@ class ColorChoice(Enum):
 
 
 class AlignmentChoice(Enum):
+    """
+    Choices of Alignment in EDM
+    """
     Left   = 'left'
     Center = 'center'
     Right  = 'right'
@@ -29,6 +40,9 @@ class AlignmentChoice(Enum):
     Top    = 'top'
 
 class FontChoice(Enum):
+    """
+    Choices of Font in EDM
+    """
     Helvetica             = 'helvetica'
     Utopia                = 'utopia'
     NewCenturySchoolbook  = 'new century schoolbook'
