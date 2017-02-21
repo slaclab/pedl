@@ -2,9 +2,7 @@ import math
 from enum import Enum
 
 from .widget  import Choice
-from .choices import ColorChoice, AlignmentChoice, FontChoice
-
-
+from .choices import FontChoice
 
 class Font:
     """
@@ -33,61 +31,53 @@ class Font:
     """
     sizes = [8,10,12,14,18,24,32,48,72]
 
-    #Dimensions
-    bold       = Dimension('bold', bool, False)
-    italicized = Dimension('italicized', bool, False)
-    color      = Choice('color', ColorChoice, ColorChoice.Black)
-    alignment  = Choice('alignment', AlignmentChoice, AlignmentChoice.Left)
-    font       = Font('font', FontChoice, FontChoice.Helvetica)
+    #Defaults
+    _size       = 18
+    _italicized = False
+    _bold       = False
+    _font       = FontChoice.Helvetica
 
     def __init__(self, size=18, italicized=False,
-                 bold=False, color=ColorChoice.Black,
-                 alignment=AlignmentChoice.Left,
-                 font=FontChoice.Helvetica):
+                 bold=False,  font=FontChoice.Helvetica):
 
         self.size       = size
         self.bold       = bold
         self.font       = font
-        self.color      = color
-        self.alignment  = alignment
-        self.italicized = italicized
-    
+        self.italiczied = italicized
 
-
-    def _tag(self):
+    @property
+    def bold(self):
         """
-        Return the formatted Font specification
-
-        Parameters
-        ----------
-        alignment : bool
-            Include the command to align the text
-
-        color : bool
-            Include the command to color the text
-        
-        Returns
-        -------
-        edm : str
+        Choice to have bold text
         """
-        
-        #Bold tag
-        if self.bold:
-            bold = 'bold'
-        else:
-            bold = 'medium'
-        
-        #Italic tag
-        if self.italicized:
-            italic = 'i'
+        return self._bold
 
-        else:
-            italic = 'r'
+    @bold.setter
+    def bold(self, value):
+        self._bold = bool(value)
 
 
-        return '-'.join([self.font.value, bold, italic, self.size])
+    @property
+    def italicized(self):
+        """
+        Choice to have italicized text
+        """
+        return self._italic
+
+    @italicized.setter
+    def italicized(self, value):
+        self._italic = bool(value)
 
 
+    def font(self):
+        """
+        Choice of font
+        """
+        return self._font
+
+    @font.setter
+    def font(self, value):
+        return self._font = FontChoice(value)
 
     @property
     def size(self):
@@ -107,6 +97,35 @@ class Font:
             self._size =  self.sizes[distance.index(min(distance))]   
 
 
+    def tag(self):
+        """
+        Return the formatted Font specification
+
+        Returns
+        -------
+        edm : str
+        """
+
+        #Bold tag
+        if self.bold:
+            bold = 'bold'
+        else:
+            bold = 'medium'
+
+        #Italic tag
+        if self.italicized:
+            italic = 'i'
+
+        else:
+            italic = 'r'
+
+
+        return '-'.join([self.font.value, bold, italic, self.size])
+
+
+
+
+
 
     def __repr__(self):
         return 'Font {} (Size : {}pt, Italic : {},'\
@@ -114,5 +133,4 @@ class Font:
                                              self.size,
                                              self.italicized,
                                              self.bold,
-                                             self.color
                                             )
