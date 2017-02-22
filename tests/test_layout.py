@@ -234,3 +234,35 @@ def test_stack_layout():
     assert l.widgets[1].y == 150
     assert l.widgets[2].y == 150
     assert l.h            == 100
+
+def test_compound_layout():
+    h  = pedl.HBoxLayout()
+    v1 = pedl.VBoxLayout()
+    v2 = pedl.VBoxLayout()
+    for l in (v1,v2):
+        l.addWidget(pedl.Widget(w=100,h=200))
+        l.addWidget(pedl.Widget(w=200,h=100))
+        h.addLayout(l)
+
+    #Check layout positioning
+    assert h.widgets[0].x == 0
+    assert h.widgets[1].x == 205
+    assert h.widgets[0].y == 0
+    assert h.widgets[1].y == 0
+    assert h.w == 405
+    assert h.h == 305
+
+    #Move child alignment
+    v1.spacing = 30
+    h.spacing = 30
+    h.alignment = pedl.choices.AlignmentChoice.Bottom
+
+    assert h.widgets[0].x == 0
+    assert h.widgets[1].x == 230
+    assert h.widgets[0].y == 0
+    assert h.widgets[1].y == 25
+    assert h.w == 430
+    assert h.h == 330
+
+
+

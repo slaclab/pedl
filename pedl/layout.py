@@ -64,14 +64,15 @@ class Layout(PedlObject):
 
     @x.setter
     def x(self, value):
-        #Set position internally
-        super(Layout, self.__class__).x.fset(self, value)
-        if self.widgets:
-            #Move first widget
-            self.widgets[0].x = value
-            #Rearrange following widgets
-            self._rearrange()
-    
+        if value != self.x:
+            #Set position internally
+            super(Layout, self.__class__).x.fset(self, value)
+            if self.widgets:
+                #Move first widget
+                self.widgets[0].x = value
+                #Rearrange following widgets
+                self._rearrange()
+
     @property
     def y(self):
         """
@@ -81,13 +82,14 @@ class Layout(PedlObject):
 
     @y.setter
     def y(self, value):
-        #Set position internally
-        super(Layout, self.__class__).y.fset(self, value)
-        if self.widgets:
-            #Move first widget
-            self.widgets[0].y = value
-            #Rearrange following widgets
-            self._rearrange()
+        if value != self.y:
+            #Set position internally
+            super(Layout, self.__class__).y.fset(self, value)
+            if self.widgets:
+                #Move first widget
+                self.widgets[0].y = value
+                #Rearrange following widgets
+                self._rearrange()
 
 
     @property
@@ -100,8 +102,9 @@ class Layout(PedlObject):
 
     @spacing.setter
     def spacing(self, value):
-        self._spacing = self._set_property(value, dtype=int)
-        self._rearrange()
+        if value != self.spacing:
+            self._spacing = self._set_property(value, dtype=int)
+            self._rearrange()
 
 
     def addWidget(self, widget):
@@ -116,7 +119,13 @@ class Layout(PedlObject):
         if not isinstance(widget, Widget):
             raise TypeError('Must be an EDM Widget')
 
+        #Note as child widget
+        widget.parent = self
+
+        #Add to widget
         self.widgets.append(widget)
+
+        #Redraw
         self._rearrange()
 
 
@@ -132,7 +141,13 @@ class Layout(PedlObject):
         if not isinstance(layout, Layout):
             raise TypeError('Must be an EDM Layout')
 
+        #Note as child layout
+        layout.parent = self
+
+        #Add to Widget
         self.widgets.append(layout)
+
+        #Redraw
         self._rearrange()
 
 
@@ -146,15 +161,16 @@ class Layout(PedlObject):
 
     @alignment.setter
     def alignment(self, align):
-        self._alignment = AlignmentChoice(align)
-        self._rearrange()
+        if align != self.alignment:
+            self._alignment = AlignmentChoice(align)
+            self._rearrange()
 
 
     def _rearrange(self):
         """
         Rearrange all of the  child widgets
         """
-        pass
+        logger.debug("Rearranging layout")
 
 
 class HBoxLayout(Layout):
@@ -245,13 +261,15 @@ class StackLayout(Layout):
 
     @alignment.setter
     def alignment(self, align):
-        try:
-            self._alignment = [AlignmentChoice(a) for a in align]
+        if align != self._alignment:
 
-        except TypeError:
-            self._alignment = [AlignmentChoice(align)]
+            try:
+                self._alignment = [AlignmentChoice(a) for a in align]
 
-        self._rearrange()
+            except TypeError:
+                self._alignment = [AlignmentChoice(align)]
+
+            self._rearrange()
 
 
     def _rearrange(self):
@@ -279,6 +297,8 @@ class StackLayout(Layout):
             else:
                 w.recenter(y=ld.center[1])
 
+        if self.parent:
+            parent._rearrange()
 
     #This is annoying I have to do this to super setter method 
     @property
