@@ -14,12 +14,13 @@ layout composed of widgets and smaller layouts that can then be applied to a
 widget by using the :meth:`.Designer.setLayout`
 """
 import logging
-from .widget  import PedlObject
+from .widget  import Widget, PedlObject
 from .choices import AlignmentChoice
 
 logger = logging.getLogger(__name__)
 
 class Layout(PedlObject):
+    obj = 'Layout'
     """
     Parameters
     ----------
@@ -29,14 +30,12 @@ class Layout(PedlObject):
     y : int, optional
         Starting Y position of the layout
     """
-    #Presets
-    alignment = None
-    _spacing  = 5
-
+    _spacing   = 5
+    _alignment = None
     def __init__(self,x=0, y=0):
-        super().__init__(x=x,y=y)
         self.widgets = list()
-        self.layouts = list()
+        super().__init__(x=x,y=y)
+
 
     @property
     def w(self):
@@ -65,9 +64,13 @@ class Layout(PedlObject):
 
     @x.setter
     def x(self, value):
-        #Make sure to rearrange widgets
-        super().x.fset(value)
-        self._rearrange()
+        #Set position internally
+        super(Layout, self.__class__).x.fset(self, value)
+        if self.widgets:
+            #Move first widget
+            self.widgets[0].x = value
+            #Rearrange following widgets
+            self._rearrange()
     
     @property
     def y(self):
@@ -78,9 +81,13 @@ class Layout(PedlObject):
 
     @y.setter
     def y(self, value):
-        #Make sure to rearrange widgets
-        super().y.fset(value)
-        self._rearrange()
+        #Set position internally
+        super(Layout, self.__class__).y.fset(self, value)
+        if self.widgets:
+            #Move first widget
+            self.widgets[0].y = value
+            #Rearrange following widgets
+            self._rearrange()
 
 
     @property
@@ -90,9 +97,11 @@ class Layout(PedlObject):
         """
         return self._spacing
 
+
     @spacing.setter
     def spacing(self, value):
         self._spacing = self._set_property(value, dtype=int)
+        self._rearrange()
 
 
     def addWidget(self, widget):
@@ -108,6 +117,7 @@ class Layout(PedlObject):
             raise TypeError('Must be an EDM Widget')
 
         self.widgets.append(widget)
+        self._rearrange()
 
 
     def addLayout(self, layout):
@@ -122,19 +132,22 @@ class Layout(PedlObject):
         if not isinstance(layout, Layout):
             raise TypeError('Must be an EDM Layout')
 
-        self.layouts.append(layout)
+        self.widgets.append(layout)
+        self._rearrange()
 
 
-    def setAlignment(self, align):
+    @property
+    def alignment(self):
         """
-        Set the Alignment
-
-        Parameters
-        ----------
-        align : :class:`.AlignmentChoice`
-            The choice of alignment
+        Alignment of the Layout selected from :class:`.AlignmentChoice`
         """
-        self.alignment = AlignmentChoice(align)
+        return self._alignment
+
+
+    @alignment.setter
+    def alignment(self, align):
+        self._alignment = AlignmentChoice(align)
+        self._rearrange()
 
 
     def _rearrange(self):
@@ -148,8 +161,7 @@ class HBoxLayout(Layout):
     """
     Layout for horizontally placed widgets
     """
-    alignment = AlignmentChoice.Top
-
+    _alignment = AlignmentChoice.Top
     def _rearrange(self):
         next_widget = self.x
 
@@ -165,7 +177,7 @@ class HBoxLayout(Layout):
                 widget.recenter(y=self.widgets[0].center[1])
 
             else:
-                logger.warning('Unrecognized alignment {}'.format(self.alignment))
+                logger.warning('Unsupported alignment {}'.format(self.alignment))
             #Place Widget
             widget.x = next_widget
             next_widget += widget.w + self.spacing
@@ -175,9 +187,10 @@ class VBoxLayout(Layout):
     """
     Layout for vertically placed widgets
     """
+    _alignment = AlignmentChoice.Left
     def _rearrange(self):
         next_widget = self.y
-        
+
         for widget in self.widgets:
             if self.alignment == AlignmentChoice.Left:
                 widget.x = self.x
@@ -189,7 +202,7 @@ class VBoxLayout(Layout):
                 widget.recenter(x=self.widgets[0].center[0])
 
             else:
-                logger.warning('Unrecognized alignment {}'.format(self.alignment))
+                logger.warning('Unsupported alignment {}'.format(self.alignment))
 
             widget.y = next_widget
             next_widget += widget.h + self.spacing
@@ -197,39 +210,77 @@ class VBoxLayout(Layout):
 
 class StackLayout(Layout):
     """
-    Layout for stacked widgets
+    Layout for widgets placed on top of each other
     """
     _spacing   = None
-    _alignment = AlignmentChoice.Center
+    _alignment = [AlignmentChoice.Center]
+
+    #This is annoying I have to do this to super setter method 
+    @property
+    def alignment(self):
+        """
+        List of alignments
+
+        The alignment specification works slightly differently in the case of the
+        stack layout, because there are two possible axes to specify. This
+        means that you may enter an list of Alignment options to be more
+        specific in your widget placement. By default, no option is given for
+        an axis, the layout assumes you want the widgets centered
+
+        Example
+        -------
+        .. code::
+
+            #Centered on both axes
+            layout.alignment = AlignmentChoice.Center
+
+            #Top-Right Corner
+            layout.alignment = [AlignmentChoice.Top, AlignmentChoice.Right]
+
+            #Left-Side Aligned, Centered in Vertical
+            layout.alignment = [AlignmentChoice.Left]
+        """
+        return self._alignment
+
+
+    @alignment.setter
+    def alignment(self, align):
+        try:
+            self._alignment = [AlignmentChoice(a) for a in align]
+
+        except TypeError:
+            self._alignment = [AlignmentChoice(align)]
+
+        self._rearrange()
+
+
     def _rearrange(self):
         ld = self.widgets[0]
 
-        for widget in self.widgets:
+        for w in self.widgets:
 
-            if self.alignment == AlignmentChoice.Left:
+            #Place X axis
+            if AlignmentChoice.Left in self.alignment:
                 w.x = ld.x
-                w.recenter(y=ld.center[1])
 
-            elif self.alignment == AlignmentChoice.Right:
+            elif AlignmentChoice.Right in self.alignment:
                 w.place_right(x=ld.right)
-                w.recenter(y=ld.center[1])
-
-            elif self.alignment == AlignmentChoice.Top:
-                w.recenter(x=ld.center[0])
-                w.y = ld.y
-
-            elif self.alignment == AlignmentChoice.Bottom:
-                w.recenter(x=ld.center[0])
-                w.place_bottom(y=ld.bottom)
-
-            elif self.alignment == AlignmentChoice.Center:
-                w.recenter(ld.center)
 
             else:
-                logger.warning('Unrecognized alignment {}'.format(self.alignment))
-                w.recenter(ld.center)
+                w.recenter(x=ld.center[0])
 
-    #This annoying I have to do this to super setter method 
+            #Place Y axis
+            if AlignmentChoice.Top in self.alignment:
+                w.y = ld.y
+
+            elif AlignmentChoice.Bottom in self.alignment:
+                w.place_bottom(y=ld.bottom)
+
+            else:
+                w.recenter(y=ld.center[1])
+
+
+    #This is annoying I have to do this to super setter method 
     @property
     def spacing(self):
         return super().spacing
