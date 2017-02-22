@@ -10,6 +10,9 @@ class PedlObject:
     name   : str , optional
         Alias of Widget
 
+    parent : ``PedlObject``, optional
+        Parent of object
+
     x : int, optional
         Horizontal Position
 
@@ -26,11 +29,13 @@ class PedlObject:
     _y = 0.
     _w = 0.
     _h = 0.
-    def __init__(self, name=None, **kwargs):
+    def __init__(self, name=None, parent=None, **kwargs):
         if not name:
             name = self.obj
 
-        self.name = name
+        self.name   = name
+        self.parent = parent
+
         #Set Dimensions
         for dimension in ('x','y','w','h'):
             if dimension in kwargs:
