@@ -18,15 +18,14 @@ class Font:
 
     italicized : bool
         Choice to have italic text
-    
-    color : :class:`.ColorChoice`
-        Choice of text color. Black by default
-
-    alignment : :class:`.AlignmentChoice
-        Either an AlignmentChoice object or an appropriate value
 
     font : :class:`.FontChoice`
         Either a FontChoice object or an appropriate value
+
+    Attributes
+    ----------
+    sizes : list
+        Available font sizes within EDM
     """
     sizes = [8,10,12,14,18,24,32,48,72]
 
@@ -70,7 +69,7 @@ class Font:
     @property
     def font(self):
         """
-        Choice of font
+        Choice of font from :class:`.FontChoice`
         """
         return self._font
 
@@ -81,7 +80,7 @@ class Font:
     @property
     def size(self):
         """
-        Size of the font
+        Size of the font, restricted to :attr:`.sizes`
         """
         return self._size
 
@@ -120,10 +119,6 @@ class Font:
 
 
         return '-'.join([self.font.value, bold, italic, self.size])
-
-
-
-
 
 
     def __repr__(self):

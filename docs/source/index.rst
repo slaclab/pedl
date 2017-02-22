@@ -18,4 +18,5 @@ PEDL
    :caption: Widget Options
    
    widget.rst
+   font.rst
    choices.rst
