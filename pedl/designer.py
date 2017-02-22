@@ -8,8 +8,11 @@ from distutils.spawn import find_executable
 from jinja2 import Environment, FileSystemLoader
 from jinja2 import TemplateNotFound
 
-from .widget import PedlObject
-from .errors import WidgetError
+from .font    import Font
+from .widget  import PedlObject, Widget
+from .errors  import WidgetError
+from .choices import FontChoice
+from .layout  import Layout
 
 logger = logging.getLogger(__name__)
 
@@ -25,13 +28,14 @@ class Designer:
     Attributes
     ----------
     widgets : list
-        Ordered list of widgets loaded into designer
+        Ordered top-level list of widgets loaded into designer
 
     env : ``jinja2.Environment``
         Environment used to render templates
     """
-    _w = 750
-    _h = 1100
+    _w    = 750
+    _h    = 1100
+    _font = FontChoice.Helvetica
 
     def __init__(self, template_dir=None):
 
@@ -55,11 +59,11 @@ class Designer:
         """
         Width of screen
         """
-        return self.w
+        return self._w
 
     @w.setter
     def w(self, value):
-        self._w = int(w)
+        self._w = int(value)
 
 
     @property
@@ -67,11 +71,11 @@ class Designer:
         """
         Height of screen
         """
-        return self.h
+        return self._h
 
     @h.setter
     def h(self, value):
-        self._h = int(h)
+        self._h = int(value)
 
 
     @property
@@ -84,7 +88,7 @@ class Designer:
     @font.setter
     def font(self, value):
         if isinstance(value, Font):
-            value = Font.font
+            value = value.font
 
         self._font = FontChoice(value)
 
@@ -95,16 +99,37 @@ class Designer:
 
         Parameters
         ----------
-        widget : :class:`.pedl.Widget`
-            Target Widget
+        object : :class:`.pedl.Widget` or :class:`.pedl.layout.Layout`
+            Target widget or layout
         """
-        if not isinstance(obj, PedlObject):
+        if not isinstance(widget, PedlObject):
             raise TypeError('Must supply a PEDL object')
 
         self.widgets.append(widget)
 
 
-    def setLayout(self, layout, origin = (5,5) ):
+    @property
+    def all_widgets(self):
+        """
+        All widgets in designer, even those in child layouts
+        """
+        widgets = []
+
+        #Recursive search of widget tree
+        def recursive_widget(widget):
+            if isinstance(widget, Layout):
+                for widget in widget.widgets:
+                    recursive_widget(widget)
+            elif isinstance(widget, Widget):
+                widgets.append(widget)
+
+        for widget in self.widgets:
+            recursive_widget(widget)
+
+        return widgets
+
+
+    def setLayout(self, layout, origin = (5,5)):
         """
         Set the main layout
 
@@ -119,8 +144,11 @@ class Designer:
         origin : tuple, optional
             (x,y) location for the top left corner of the layout
         """
+        if not isinstance(layout, Layout):
+            raise TypeError('Must provide a Layout object')
+
         layout.x, layout.y = origin
-        self.widgets = copy.copy(layout.widgets)
+        self.widgets = [layout]
 
 
     def render_object(self, obj):
