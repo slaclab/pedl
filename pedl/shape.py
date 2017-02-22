@@ -12,14 +12,15 @@ class Shape(Widget):
 
     @linewidth.setter
     def linewidth(self, value):
-        return self._linewidth = self.set_property(value, dtype=int)
+        self._linewidth = self.set_property(value, dtype=int)
 
     @property
     def lineColor(self):
         return self._lineColor
 
-    @lineColor.setter(self, value):
-        return self._lineColor = self.set_property(value, dtype=ColorChoice)
+    @lineColor.setter
+    def lineColor(self, value):
+        self._lineColor = self.set_property(value, dtype=ColorChoice)
 
 
 class Circle(Shape):

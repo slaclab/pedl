@@ -1,4 +1,4 @@
-import numpy as np
+import math
 from .choices import ColorChoice
 
 class PedlObject:
@@ -27,12 +27,10 @@ class PedlObject:
     _w = 0.
     _h = 0.
     def __init__(self, name=None, **kwargs):
-
-        #Environment Variables 
         if not name:
             name = self.obj
 
-        self.name   = name
+        self.name = name
         #Set Dimensions
         for dimension in ('x','y','w','h'):
             if dimension in kwargs:
@@ -47,7 +45,7 @@ class PedlObject:
         """
         Starting position of the left side of the Widget
         """
-        self._x
+        return self._x
 
     @x.setter
     def x(self, val):
@@ -59,7 +57,7 @@ class PedlObject:
         """
         Starting position of the top of the widget
         """
-        self._y
+        return self._y
 
     @y.setter
     def y(self, val):
@@ -71,7 +69,7 @@ class PedlObject:
         """
         Width of the Widget
         """
-        self._w
+        return self._w
 
     @w.setter
     def w(self, val):
@@ -83,37 +81,11 @@ class PedlObject:
         """
         Height of the Widget
         """
-        self._h
+        return self._h
 
-    @w.setter
+    @h.setter
     def h(self, val):
         self._h = self._set_property(val, dtype=int)
-
-
-    @property
-    def fill(self):
-        """
-        Background fill in the Widget, if set to None, the display background
-        is used. Otherwise this should be a named color provided in 
-        :class:`.ColorChoice` or if the color you want is unavailable an
-        integer in ``(0,94)`` specifying the index of the desired color 
-        """
-        return self._fill
-
-
-    @fill.setter
-    def fill(self, value):
-        if isinstance(value, NoneType):
-            self._fill = value
-
-        elif value in ColorChoice:
-            self._fill = value
-
-        elif value in range(0,94):
-            self._fill = int(value)
-
-        else:
-            self._fill = ColorChoice(value)
 
 
     @property
@@ -121,7 +93,7 @@ class PedlObject:
         """
         Position of the center of the widget
         """
-        return (self.x+self.w/2, self.y + self.h/2)
+        return (self.x+round(self.w/2), self.y + round(self.h/2))
 
 
     @property
@@ -130,6 +102,7 @@ class PedlObject:
         Position of the bottom of the widget
         """
         return self.y + self.h
+
 
     @property
     def right(self):
@@ -160,9 +133,9 @@ class PedlObject:
         Place the center of the widget at a x,y position
         """
         if x:
-            self.x = x - self.w/2
+            self.x = x - round(self.w/2)
         if y:
-            self.y = y - self.y/2
+            self.y = y - round(self.y/2)
 
         return self.x, self.y
 
@@ -176,8 +149,8 @@ class PedlObject:
 
 class Widget(PedlObject):
     """
-    The basic Widget that all others inherit from, defining positiong and fill
-    coloring settings
+    The basic Widget that all others inherit from, defining positioning and
+    fill coloring settings
 
     Parameters
     ----------
