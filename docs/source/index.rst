@@ -11,6 +11,7 @@ PEDL
    :caption: Screen Design
 
    designer.rst
+   layout.rst
 
 .. toctree::
    :maxdepth: 1
