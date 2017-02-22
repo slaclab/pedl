@@ -1,0 +1,6 @@
+[run]
+source =
+   pedl
+[report]
+omit =
+   */tests/*
