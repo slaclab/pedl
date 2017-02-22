@@ -30,10 +30,10 @@ class Font:
     sizes = [8,10,12,14,18,24,32,48,72]
 
     #Defaults
-    _size       = 18
-    _italicized = False
-    _bold       = False
-    _font       = FontChoice.Helvetica
+    _size   = 18
+    _italic = False
+    _bold   = False
+    _font   = FontChoice.Helvetica
 
     def __init__(self, size=18, italicized=False,
                  bold=False,  font=FontChoice.Helvetica):
@@ -94,7 +94,7 @@ class Font:
             distance = [math.fabs(i-value) for i in self.sizes]
             self._size =  self.sizes[distance.index(min(distance))]   
 
-
+    @property
     def tag(self):
         """
         Return the formatted Font specification
@@ -117,8 +117,10 @@ class Font:
         else:
             italic = 'r'
 
+        #Trailing zero on size
+        size = '{:.1f}'.format(self.size)
 
-        return '-'.join([self.font.value, bold, italic, self.size])
+        return '-'.join([self.font.value, bold, italic, size])
 
 
     def __repr__(self):
