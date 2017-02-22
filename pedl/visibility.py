@@ -48,7 +48,7 @@ class Visibility:
         Whether the widget should be visible when the PV value enters the given
         range
         """
-        self._inverted
+        return self._inverted
 
     @inverted.setter
     def inverted(self, value):
@@ -71,10 +71,10 @@ class Visibility:
         if not self.pv:
             return False
 
-        if self.min and self.max:
+        if self.min is not None and self.max is not None:
             return self.min < self.max
 
-        elif self.min or self.max:
+        elif self.min is not None or self.max is not None:
             return True
 
         else:
