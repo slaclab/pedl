@@ -1,5 +1,5 @@
-import math
-from .choices import ColorChoice
+from .visibility import Visibility
+from .choices    import ColorChoice
 
 class PedlObject:
     """
@@ -135,7 +135,7 @@ class PedlObject:
         if x:
             self.x = x - round(self.w/2)
         if y:
-            self.y = y - round(self.y/2)
+            self.y = y - round(self.h/2)
 
         return self.x, self.y
 
@@ -223,14 +223,8 @@ class Widget(PedlObject):
 
     @fill.setter
     def fill(self, value):
-        if isinstance(value, NoneType):
+        if value is None:
             self._fill = value
-
-        elif value in ColorChoice:
-            self._fill = value
-
-        elif value in range(0,94):
-            self._fill = int(value)
 
         else:
             self._fill = ColorChoice(value)

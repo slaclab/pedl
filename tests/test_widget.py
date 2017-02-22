@@ -6,6 +6,9 @@ def pedl_obj():
     return pedl.widget.PedlObject('xxx', x=50, y=50,
                                   w=100, h=100)
 
+@pytest.fixture(scope='module')
+def widget():
+    return pedl.Widget()
 
 def test_x(pedl_obj):
     assert pedl_obj.x == 50
@@ -42,6 +45,24 @@ def test_placements(pedl_obj):
     pedl_obj.recenter(x=50, y=50)
     assert pedl_obj.x == 0
     assert pedl_obj.y == 0
+    pedl_obj.recenter(x=100, y=50)
+    assert pedl_obj.x == 50
+    assert pedl_obj.y == 0
 
+def test_vanishing(widget):
+    assert not widget.vanishing
+    widget.visibility.pv  = "TST:PV"
+    widget.visibility.min = 4
+    assert widget.vanishing
 
+def test_colorPV(widget):
+    widget.colorPV = 'TST:PV'
+    assert widget.colorPV == 'TST:PV'
+
+def test_fill(widget):
+    assert widget.fill == None
+    widget.fill = 93
+    assert widget.fill == pedl.choices.ColorChoice.MFX
+    widget.fill = pedl.choices.ColorChoice.Blue
+    assert widget.fill == pedl.choices.ColorChoice.Blue
 
