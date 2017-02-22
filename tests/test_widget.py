@@ -59,10 +59,4 @@ def test_colorPV(widget):
     widget.colorPV = 'TST:PV'
     assert widget.colorPV == 'TST:PV'
 
-def test_fill(widget):
-    assert widget.fill == None
-    widget.fill = 93
-    assert widget.fill == pedl.choices.ColorChoice.MFX
-    widget.fill = pedl.choices.ColorChoice.Blue
-    assert widget.fill == pedl.choices.ColorChoice.Blue
 
