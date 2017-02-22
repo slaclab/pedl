@@ -146,17 +146,21 @@ class Designer:
             widgets = obj.widgets
 
         for widget in widgets:
-            logger.debug('Rendering widget {} ...'.format(widget.name))
-            try:
+            if isinstance(widget, Layout):
+                logger.debug('Rendering child layout ...')
+                edl += self.render_object(widget)
 
-                template = self.env.get_template(widget.template)
-                logger.debug('Using template {} ...'.format(template.filename))
+            else:
+                logger.debug('Rendering widget {} ...'.format(widget.name))
+                try:
+                    template = self.env.get_template(widget.template)
+                    logger.debug('Using template {} ...'.format(template.filename))
 
-            except TemplateNotFound:
-                raise WidgetError('Widget {} has non-existant template {}'
-                                  ''.format(widget.name, widget.template))
+                except TemplateNotFound:
+                    raise WidgetError('Widget {} has non-existant template {}'
+                                      ''.format(widget.name, widget.template))
 
-            edl += template.render(widget=widget)
+                edl += template.render(widget=widget)
 
         return edl
 
@@ -209,8 +213,6 @@ class Designer:
             self._create(f, title=title)
 
 
-
-
     def launch(self, path, wait=True, wd=None, **kwargs):
         """
         Launch an EDL file
@@ -243,7 +245,6 @@ class Designer:
         EnvironmentError:
             If the ``edm`` executable is not in the system path
 
-
         Example
         -------
         .. code::
@@ -268,7 +269,6 @@ class Designer:
                 proc.wait()
 
         except OSError:
-
             if not find_executable('edm'):
                 raise EnvironmentError('EDM is not in current environment')
 
