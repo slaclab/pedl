@@ -253,16 +253,17 @@ def test_compound_layout():
     assert h.h == 305
 
     #Move child alignment
-    v1.spacing = 30
-    h.spacing = 30
     h.alignment = pedl.choices.AlignmentChoice.Bottom
-
-    assert h.widgets[0].x == 0
-    assert h.widgets[1].x == 230
+    v1.spacing  = 30
     assert h.widgets[0].y == 0
     assert h.widgets[1].y == 25
-    assert h.w == 430
     assert h.h == 330
+
+    #Move parent alignment
+    h.spacing  = 30
+    assert h.widgets[0].x == 0
+    assert h.widgets[1].x == 230
+    assert h.w == 430
 
 
 

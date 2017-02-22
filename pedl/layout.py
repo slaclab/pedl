@@ -170,7 +170,12 @@ class Layout(PedlObject):
         """
         Rearrange all of the  child widgets
         """
-        logger.debug("Rearranging layout")
+        logger.debug("Rearranged layout {}".format(self))
+
+        if self.parent:
+            logger.debug("Triggered rearrangement of parent layout {}"
+                         "".format(self.parent))
+            self.parent._rearrange()
 
 
 class HBoxLayout(Layout):
@@ -180,6 +185,12 @@ class HBoxLayout(Layout):
     _alignment = AlignmentChoice.Top
     def _rearrange(self):
         next_widget = self.x
+
+        if self.alignment not in (AlignmentChoice.Top,
+                                  AlignmentChoice.Bottom,
+                                  AlignmentChoice.Center):
+            logger.warning('Unsupported alignment {} HBoxLayout'
+                           ''.format(self.alignment))
 
         for widget in self.widgets:
             #Align Widget
@@ -192,11 +203,12 @@ class HBoxLayout(Layout):
             elif self.alignment == AlignmentChoice.Center:
                 widget.recenter(y=self.widgets[0].center[1])
 
-            else:
-                logger.warning('Unsupported alignment {}'.format(self.alignment))
             #Place Widget
             widget.x = next_widget
             next_widget += widget.w + self.spacing
+        
+        #Rearrange parent layout
+        super()._rearrange()
 
 
 class VBoxLayout(Layout):
@@ -206,6 +218,12 @@ class VBoxLayout(Layout):
     _alignment = AlignmentChoice.Left
     def _rearrange(self):
         next_widget = self.y
+        
+        if self.alignment not in (AlignmentChoice.Left,
+                                  AlignmentChoice.Right,
+                                  AlignmentChoice.Center):
+            logger.warning('Unsupported alignment {} for VBoxLayout'
+                           ''.format(self.alignment))
 
         for widget in self.widgets:
             if self.alignment == AlignmentChoice.Left:
@@ -217,12 +235,11 @@ class VBoxLayout(Layout):
             elif self.alignment == AlignmentChoice.Center:
                 widget.recenter(x=self.widgets[0].center[0])
 
-            else:
-                logger.warning('Unsupported alignment {}'.format(self.alignment))
-
             widget.y = next_widget
             next_widget += widget.h + self.spacing
 
+        #Rearrange parent layout
+        super()._rearrange()
 
 class StackLayout(Layout):
     """
@@ -297,8 +314,10 @@ class StackLayout(Layout):
             else:
                 w.recenter(y=ld.center[1])
 
-        if self.parent:
-            parent._rearrange()
+        #Rearrange parent layout
+        super()._rearrange()
+
+
 
     #This is annoying I have to do this to super setter method 
     @property
