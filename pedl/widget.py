@@ -25,13 +25,15 @@ class PedlObject:
     h : int, optional
         Height
     """
-    _x = 0.
-    _y = 0.
-    _w = 0.
-    _h = 0.
+    widgetClass = None
+    _x   = 0.
+    _y   = 0.
+    _w   = 0.
+    _h   = 0.
+
     def __init__(self, name=None, parent=None, **kwargs):
         if not name:
-            name = self.obj
+            name = self.widgetClass
 
         self.name   = name
         self.parent = parent
@@ -54,7 +56,7 @@ class PedlObject:
 
     @x.setter
     def x(self, val):
-        self._x = self._set_property(val, dtype=int)
+        self._x = int(val)
 
 
     @property
@@ -66,7 +68,7 @@ class PedlObject:
 
     @y.setter
     def y(self, val):
-        self._y = self._set_property(val, dtype=int)
+        self._y = int(val)
 
 
     @property
@@ -78,7 +80,7 @@ class PedlObject:
 
     @w.setter
     def w(self, val):
-        self._w = self._set_property(val, dtype=int)
+        self._w = int(val)
     
     
     @property
@@ -90,7 +92,7 @@ class PedlObject:
 
     @h.setter
     def h(self, val):
-        self._h = self._set_property(val, dtype=int)
+        self._h = int(val)
 
 
     @property
@@ -145,13 +147,6 @@ class PedlObject:
         return self.x, self.y
 
 
-    def _set_property(self, value, dtype=None):
-            if dtype and not isinstance(value, dtype):
-                value = dtype(value)
-
-            return value
-
-
 class Widget(PedlObject):
     """
     The basic Widget that all others inherit from, defining positioning and
@@ -184,7 +179,6 @@ class Widget(PedlObject):
     minor    = 1
     release  = 1
     template = 'widget.edl'
-    obj      = None
 
     _colorPV = None
 

@@ -20,7 +20,6 @@ from .choices import AlignmentChoice
 logger = logging.getLogger(__name__)
 
 class Layout(PedlObject):
-    obj = 'Layout'
     """
     Parameters
     ----------
@@ -103,7 +102,7 @@ class Layout(PedlObject):
     @spacing.setter
     def spacing(self, value):
         if value != self.spacing:
-            self._spacing = self._set_property(value, dtype=int)
+            self._spacing = int(value)
             self._rearrange()
 
 
