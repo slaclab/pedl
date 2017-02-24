@@ -5,11 +5,11 @@ minor 0
 release 1
 x 0
 y 0
-w {{self.width}}
-h {{self.height}}
-font "{{self.font}}"
-ctlFont "{{self.font}}"
-btnFont "{{self.font}}"
+w {{screen.w}}
+h {{screen.h}}
+font "{{screen.font}}"
+ctlFont "{{screen.font}}"
+btnFont "{{screen.font}}"
 fgColor
 bgColor
 textColor

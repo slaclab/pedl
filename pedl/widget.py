@@ -26,10 +26,10 @@ class PedlObject:
         Height
     """
     widgetClass = None
-    _x   = 0.
-    _y   = 0.
-    _w   = 0.
-    _h   = 0.
+    _x   = 0
+    _y   = 0
+    _w   = 0
+    _h   = 0
 
     def __init__(self, name=None, parent=None, **kwargs):
         if not name:

@@ -7,6 +7,7 @@ class Shape(Widget):
 
     Many of the basic widgets in EDM have these simple properties
     """
+    template   = 'shape.edl'
     _linewidth = 1
     _fill      = None
     _lineColor = ColorChoice.Black

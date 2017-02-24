@@ -1,0 +1,85 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 70
+y 26
+w 780
+h 1125
+font "helvetica-medium-r-18.0"
+ctlFont "helvetica-medium-r-18.0"
+btnFont "helvetica-medium-r-18.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 14
+ctlFgColor2 index 0
+ctlBgColor1 index 0
+ctlBgColor2 index 14
+topShadowColor index 0
+botShadowColor index 14
+showGrid
+snapToGrid
+gridSize 4
+endScreenProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 25
+y 25
+w 200
+h 100
+lineColor index 14
+fill
+fillColor index 14
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 25
+y 150
+w 200
+h 100
+lineColor index 14
+fill
+fillColor index 92
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 250
+y 25
+w 200
+h 100
+lineWidth 1
+lineColor index 0
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 250
+y 130
+w 200
+h 200
+lineColor index 14
+fill
+fillColor index 90
+endObjectProperties
+

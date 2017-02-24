@@ -51,7 +51,8 @@ class Designer:
 
         logger.debug('Using {} as template directory ...'.format(template_dir))
 
-        self.env = Environment(loader=FileSystemLoader(template_dir))
+        self.env = Environment(loader=FileSystemLoader(template_dir),
+                               trim_blocks=True, lstrip_blocks=True)
 
 
     @property
@@ -168,7 +169,7 @@ class Designer:
         edl = ''
 
         if isinstance(obj, Widget):
-            widgets = [widget]
+            widgets = [obj]
 
         elif isinstance(obj, Layout):
             widgets = obj.widgets
@@ -313,8 +314,8 @@ class Designer:
         Draw the EDL screen
         """
         screen = self.env.get_template('window.edl')
-        f.write(screen.render(title, self))
+        f.write(screen.render(title=title, screen=self))
 
-        for widget in widgets:
+        for widget in self.widgets:
             f.write(self.render_widget(widget))
 
