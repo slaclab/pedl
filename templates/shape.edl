@@ -1,7 +1,7 @@
 {% extends 'widget.edl' %}
 {% block properties %}
 {% if widget.fill %}fill
-fillColor {{widget.fill}}{% endif %}
+fillColor index {{widget.fill.value}}{% endif %}
 lineWidth {{widget.lineWidth}}
 lineColor index {{widget.lineColor.value}}
 {% endblock %}

@@ -1,21 +1,25 @@
 4 0 1
 beginScreenProperties
 major 4
-minor 0
-release 1
-x 0
-y 0
+minor {{screen.minor}}
+release {{screen.release}}
+x {{screen.x}}
+y {{screen.y}}
 w {{screen.w}}
 h {{screen.h}}
 font "{{screen.font}}"
 ctlFont "{{screen.font}}"
 btnFont "{{screen.font}}"
-fgColor
-bgColor
-textColor
-topShadowColor
-botShadowColor
-title "{{title}}"
+fgColor index {{screen.foreground.value}}
+bgColor index {{screen.background.value}}
+textColor index 14
+ctlFgColor index {{screen.foreground.value}}
+ctlFgColor2 index 0
+ctlBgColor1 index 0
+ctlBgColor2 index {{screen.background.value}}
+topShadowColor index 0
+botShadowColor index 14
+title "{{screen.name}}"
 showGrid
 snapToGrid
 gridSize 4
