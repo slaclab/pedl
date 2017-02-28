@@ -1,8 +1,13 @@
 import os
 import pytest
+from distutils.spawn import find_executable 
 
 import pedl
 from pedl.choices import FontChoice
+
+edm_dependent = pytest.mark.skipif(find_executable('edm') != None,
+                                   reason='EDM not found in current'\
+                                           ' environment')
 
 def test_designer_init():
     with pytest.raises(FileNotFoundError):
@@ -10,6 +15,7 @@ def test_designer_init():
 
     d = pedl.Designer()
     assert os.path.exists(d.env.loader.searchpath[0])
+
 
 def test_attributes():
     d = pedl.Designer()
