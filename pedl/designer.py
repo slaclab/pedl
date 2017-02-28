@@ -9,7 +9,7 @@ from jinja2 import Environment, FileSystemLoader
 from jinja2 import TemplateNotFound
 
 from .font    import Font
-from .widget  import PedlObject, Widget
+from .widget  import PedlObject, Screen, Widget
 from .errors  import WidgetError
 from .choices import FontChoice
 from .layout  import Layout
@@ -33,12 +33,9 @@ class Designer:
     env : ``jinja2.Environment``
         Environment used to render templates
     """
-    _w    = 750
-    _h    = 1100
-    _font = FontChoice.Helvetica
-
     def __init__(self, template_dir=None):
 
+        self.screen  = Screen()
         self.widgets = list()
 
         #Load saved templates
@@ -53,45 +50,6 @@ class Designer:
 
         self.env = Environment(loader=FileSystemLoader(template_dir),
                                trim_blocks=True, lstrip_blocks=True)
-
-
-    @property
-    def w(self):
-        """
-        Width of screen
-        """
-        return self._w
-
-    @w.setter
-    def w(self, value):
-        self._w = int(value)
-
-
-    @property
-    def h(self):
-        """
-        Height of screen
-        """
-        return self._h
-
-    @h.setter
-    def h(self, value):
-        self._h = int(value)
-
-
-    @property
-    def font(self):
-        """
-        Set the default font for the screen
-        """
-        return self._font
-
-    @font.setter
-    def font(self, value):
-        if isinstance(value, Font):
-            value = value.font
-
-        self._font = FontChoice(value)
 
 
     def addWidget(self, widget):
@@ -168,11 +126,14 @@ class Designer:
         """
         edl = ''
 
-        if isinstance(obj, Widget):
+        if isinstance(obj, Layout):
+            widgets = obj.widgets
+
+        elif isinstance(obj, PedlObject):
             widgets = [obj]
 
-        elif isinstance(obj, Layout):
-            widgets = obj.widgets
+        else:
+            widgets = obj
 
         for widget in widgets:
             if isinstance(widget, Layout):
@@ -314,7 +275,7 @@ class Designer:
         Draw the EDL screen
         """
         screen = self.env.get_template('window.edl')
-        f.write(screen.render(title=title, screen=self))
+        f.write(screen.render(screen=self.screen))
 
         for widget in self.widgets:
             f.write(self.render_widget(widget))

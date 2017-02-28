@@ -208,3 +208,35 @@ class Widget(PedlObject):
         self._colorPV = value
 
 
+class Screen(PedlObject):
+    """
+    Control over EDM Screen Parameters
+    """
+    _background = ColorChoice.Black
+    _foreground = ColorChoice.Grey
+    _minor   = 0
+    _release = 0
+    _w = 750
+    _h = 1100
+
+    @property
+    def background(self):
+        """
+        Background color of EDM screen as a :class:`.ColorChoice`
+        """
+        return self._background
+
+    @background.setter
+    def background(self, color):
+        self._background = ColorChoice(color)
+    
+    @property
+    def foreground(self):
+        """
+        Foreground color of EDM screen as a :class:`.ColorChoice`
+        """
+        return self._foreground
+
+    @background.setter
+    def background(self, color):
+        self._foreground = ColorChoice(color)
