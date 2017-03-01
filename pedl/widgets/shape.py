@@ -1,5 +1,5 @@
-from .widget  import Widget
-from .choices import ColorChoice 
+from ..widget  import Widget
+from ..choices import ColorChoice 
 
 class Shape(Widget):
     """
