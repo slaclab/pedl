@@ -2,7 +2,8 @@ from setuptools import (setup, find_packages)
 
 
 setup(name    = 'pedl',
-      version = '0.0.1',
+      version  = versioneer.get_version(),
+      cmdclass = versioneer.get_cmdclass(),
       license = 'BSD-like',
       author  = 'SLAC National Accelerator Laboratory',
 
