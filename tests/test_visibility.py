@@ -35,3 +35,16 @@ def test_valid():
     #Test open ended range
     vis.max = None
     assert vis.valid
+
+def test_template():
+    d = pedl.Designer()
+    w = pedl.Widget()
+    assert 'vis' not in d.render_object(w)
+    w.visibility.pv = 'TST:PV'
+    w.visibility.min, w.visibility.max = 1,2
+    assert 'visPv TST:PV' in d.render_object(w)
+    assert 'visMax 2' in d.render_object(w)
+    assert 'visMin 1' in d.render_object(w)
+    w.visibility.inverted = True
+    assert 'visInverted' in d.render_object(w)
+
