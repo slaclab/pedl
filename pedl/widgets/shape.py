@@ -1,11 +1,15 @@
+"""
+EDM is capable of drawing a few basic shapes, :class:`.Rectangle` and
+:class:`.Circle`. Because both have identical options, just with a different
+drawing command, we have a shared :class:`.Shape` object that each inherits
+"""
 from ..widget  import Widget
 from ..choices import ColorChoice 
+
 
 class Shape(Widget):
     """
     Basic Shape Widget
-
-    Many of the basic widgets in EDM have these simple properties
     """
     template   = 'shape.edl'
     _linewidth = 1
@@ -26,14 +30,15 @@ class Shape(Widget):
     @property
     def lineColor(self):
         """
-        Color of the frame around the Widget
+        Color of the frame around the Widget expressed as a
+        :class:`.ColorChoice`
         """
         return self._lineColor
 
     @lineColor.setter
     def lineColor(self, value):
         self._lineColor = ColorChoice(value)
-    
+
     @property
     def fill(self):
         """

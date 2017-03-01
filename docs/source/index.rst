@@ -1,10 +1,4 @@
-.. PEDL documentation master file, created by
-   sphinx-quickstart on Sun Feb 19 18:12:29 2017.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-PEDL
-====
+.. include:: ../../README.rst
 
 .. toctree::
    :maxdepth: 1
@@ -15,8 +9,15 @@ PEDL
 
 .. toctree::
    :maxdepth: 1
-   :caption: Widget Options
+   :caption: Widget Types
+
+   shape.rst
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Basic Widget Options
    
    widget.rst
    font.rst
    choices.rst
+

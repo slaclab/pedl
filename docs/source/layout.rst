@@ -12,6 +12,7 @@ Base Layout
 Layout Types
 ++++++++++++
 .. autoclass:: pedl.VBoxLayout
+   :show-inheritance:
 
 .. autoclass:: pedl.HBoxLayout
 
