@@ -3,3 +3,6 @@ class DimensionError(Exception):
 
 class WidgetError(Exception):
     pass
+
+class DesignerError(Exception):
+    pass
