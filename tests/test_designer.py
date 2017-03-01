@@ -33,11 +33,10 @@ def test_add_widget():
 def test_set_layout():
     d = pedl.Designer()
     l = pedl.StackLayout()
-    d.setLayout(l)
+    l.addWidget(pedl.Widget(w=100, h=100))
+    d.screen.setLayout(l)
     assert d.widgets == [l]
 
-    with pytest.raises(TypeError):
-        d.setLayout(4)
 
 def test_recursive_widget_search():
     d  = pedl.Designer()
@@ -47,7 +46,7 @@ def test_recursive_widget_search():
     w3 = pedl.Widget()
     l.addWidget(w1)
     l.addWidget(w2)
-    d.setLayout(l)
+    d.screen.setLayout(l)
     d.addWidget(w3)
     assert d.widgets == [l,w3]
     assert d.all_widgets == [w1,w2,w3]

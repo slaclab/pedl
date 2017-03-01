@@ -281,9 +281,8 @@ class Screen(PedlObject):
         if not self.parent:
             raise DesignerError("Screen must have a designer parent"
                                 " to set the layout")
-
-        if not isinstance(layout, Layout):
-            raise TypeError('Must provide a Layout object')
+        if not layout.widgets:
+            raise ValueError("Provided layout has not Widgets!")
 
         #Resize screen
         if resize:
