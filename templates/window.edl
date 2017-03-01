@@ -1,25 +1,25 @@
 4 0 1
 beginScreenProperties
 major 4
-minor {{screen.minor}}
-release {{screen.release}}
-x {{screen.x}}
-y {{screen.y}}
-w {{screen.w}}
-h {{screen.h}}
-font "{{screen.font}}"
-ctlFont "{{screen.font}}"
-btnFont "{{screen.font}}"
-fgColor index {{screen.foreground.value}}
-bgColor index {{screen.background.value}}
+minor {{widget.minor}}
+release {{widget.release}}
+x {{widget.x}}
+y {{widget.y}}
+w {{widget.w}}
+h {{widget.h}}
+font "helvetica-medium-r-18.0"
+ctlFont "helvetica-medium-r-18.0"
+btnFont "helvetica-medium-r-18.0"
+fgColor index {{widget.foreground.value}}
+bgColor index {{widget.background.value}}
 textColor index 14
-ctlFgColor index {{screen.foreground.value}}
+ctlFgColor1 index {{widget.foreground.value}}
 ctlFgColor2 index 0
 ctlBgColor1 index 0
-ctlBgColor2 index {{screen.background.value}}
+ctlBgColor2 index {{widget.foreground.value}}
 topShadowColor index 0
 botShadowColor index 14
-title "{{screen.name}}"
+title "{{widget.name}}"
 showGrid
 snapToGrid
 gridSize 4

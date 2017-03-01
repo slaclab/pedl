@@ -8,7 +8,7 @@ x {{widget.x}}
 y {{widget.y}}
 w {{widget.w}}
 h {{widget.h}}
-{% if widget.vanishing %} visPv {{widget.visibility.pv}}
+{% if widget.vanishing %}visPv {{widget.visibility.pv}}
 {% if widget.visibility.inverted %}visInverted{% endif %}
 {% if widget.visibility.max %}visMax {{widget.visibility.max}}{% endif %}
 {% if widget.visibility.min %}visMin {{widget.visibility.min}}{% endif %}{% endif %}

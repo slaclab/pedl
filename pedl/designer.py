@@ -132,9 +132,6 @@ class Designer:
         elif isinstance(obj, PedlObject):
             widgets = [obj]
 
-        else:
-            widgets = obj
-
         for widget in widgets:
             if isinstance(widget, Layout):
                 logger.debug('Rendering child layout ...')
@@ -179,12 +176,12 @@ class Designer:
         --------
         :meth:`.Designer.launch`
         """
-        with tempfile.TemporaryFile(mode='w+') as f:
-            self._create(f, title='PEDL Designer')
-            return self._launch(f.name, wd=wd, wait=wait ,**kwargs)
+        with tempfile.NamedTemporaryFile(mode='w+', suffix='.edl') as temp:
+            self._create(temp.file)
+            return self.launch(temp.name, wd=wd, wait=wait ,**kwargs)
 
 
-    def save(self, path, title=None):
+    def save(self, path):
         """
         Save the screen to an edl file
 
@@ -192,15 +189,12 @@ class Designer:
         ----------
         path : str
             Desired filename and path
-
-        title: str, optional
-            Title of Page
         """
         if not path.endswith('.edl'):
             path += '.edl'
 
         with open(path, 'w+') as f:
-            self._create(f, title=title)
+            self._create(f)
 
 
     def launch(self, path, wait=True, wd=None, **kwargs):
@@ -232,7 +226,7 @@ class Designer:
         FileNotFoundError:
             If the .edl file does not exist
 
-        EnvironmentError:
+        OSError:
             If the ``edm`` executable is not in the system path
 
         Example
@@ -253,6 +247,8 @@ class Designer:
         edm_args.append(path)
 
         try:
+            logger.debug("Launching {} with the following command {}"
+                         "".format(path, edm_args))
             proc = subprocess.Popen(edm_args, cwd=wd, stdout=None)
 
             if wait:
@@ -260,23 +256,23 @@ class Designer:
 
         except OSError:
             if not find_executable('edm'):
-                raise EnvironmentError('EDM is not in current environment')
+                raise OSError('EDM is not in current environment')
 
             raise
 
         except KeyboardInterrupt:
             print('Preview aborted ...')
+            proc.terminate()
 
         return proc
 
 
-    def _create(self,f, title=None):
+    def _create(self,f):
         """
         Draw the EDL screen
         """
-        screen = self.env.get_template('window.edl')
-        f.write(screen.render(screen=self.screen))
-
-        for widget in self.widgets:
-            f.write(self.render_widget(widget))
+        objs = [self.screen, *self.widgets]
+        edl  = [self.render_object(obj) for obj in objs]
+        f.write('\n\n'.join(edl))
+        f.flush()
 

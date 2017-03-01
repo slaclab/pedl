@@ -212,10 +212,12 @@ class Screen(PedlObject):
     """
     Control over EDM Screen Parameters
     """
-    _background = ColorChoice.Black
-    _foreground = ColorChoice.Grey
-    _minor   = 0
-    _release = 0
+    template    = 'window.edl'
+    minor       = 0
+    release     = 1
+
+    _background = ColorChoice.Grey
+    _foreground = ColorChoice.Black
     _w = 750
     _h = 1100
 
@@ -229,7 +231,7 @@ class Screen(PedlObject):
     @background.setter
     def background(self, color):
         self._background = ColorChoice(color)
-    
+
     @property
     def foreground(self):
         """
@@ -238,5 +240,5 @@ class Screen(PedlObject):
         return self._foreground
 
     @background.setter
-    def background(self, color):
+    def foreground(self, color):
         self._foreground = ColorChoice(color)
