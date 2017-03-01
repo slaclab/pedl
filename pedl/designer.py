@@ -35,7 +35,7 @@ class Designer:
     """
     def __init__(self, template_dir=None):
 
-        self.screen  = Screen()
+        self.screen  = Screen(parent=self)
         self.widgets = list()
 
         #Load saved templates
@@ -86,28 +86,6 @@ class Designer:
             recursive_widget(widget)
 
         return widgets
-
-
-    def setLayout(self, layout, origin=(5,5)):
-        """
-        Set the main layout
-
-        This clears the current screen and draws all of the widgets as
-        described by the given layout
-
-        Parameters
-        ----------
-        layout : :class:`.pedl.Layout`
-            Master layout for screen
-
-        origin : tuple, optional
-            (x,y) location for the top left corner of the layout
-        """
-        if not isinstance(layout, Layout):
-            raise TypeError('Must provide a Layout object')
-
-        layout.x, layout.y = origin
-        self.widgets = [layout]
 
 
     def render_object(self, obj):
@@ -238,7 +216,7 @@ class Designer:
         if not os.path.exists(path):
             raise FileNotFoundError(path)
 
-        edm_args = ['edm', '-x']
+        edm_args = ['edm', '-x', '-eolc']
 
         if kwargs:
             edm_args.append(','.join(['='.join([key,value])

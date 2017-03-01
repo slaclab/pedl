@@ -1,5 +1,6 @@
 from .visibility import Visibility
 from .choices    import ColorChoice
+from .errors     import DesignerError
 
 class PedlObject:
     """
@@ -211,11 +212,18 @@ class Widget(PedlObject):
 class Screen(PedlObject):
     """
     Control over EDM Screen Parameters
+    
+    Attributes
+    ----------
+    margin : int
+        Margin sizes for the screen
     """
     template    = 'window.edl'
     minor       = 0
     release     = 1
+    margin      = 5
 
+    #Default Settings
     _background = ColorChoice.Grey
     _foreground = ColorChoice.Black
     _w = 750
@@ -242,3 +250,58 @@ class Screen(PedlObject):
     @foreground.setter
     def foreground(self, color):
         self._foreground = ColorChoice(color)
+
+
+    def setLayout(self, layout, resize=False, origin=None):
+        """
+        Set the main layout
+
+        This clears the current screen and draws all of the widgets as
+        described by the given layout. By default, the layout is centered in
+        the horizontal and placed at the top margin in the vertical.
+
+        Parameters
+        ----------
+        layout : :class:`.pedl.Layout`
+            Master layout for screen
+
+        resize : bool , optional
+            Resize the screen to fit the given Layout. In this case the layout
+            will be placed in the upper left hand corner, seperated from the
+            edge of the screen by the :attr:`.margin` 
+
+        origin : tuple, optional
+            (x,y) location for the top left corner of the layout
+        
+        Raises
+        ------
+        DesignerError:
+            The screen must belong to a parent :class:`.Designer`
+        """
+        if not self.parent:
+            raise DesignerError("Screen must have a designer parent"
+                                " to set the layout")
+
+        if not isinstance(layout, Layout):
+            raise TypeError('Must provide a Layout object')
+
+        #Resize screen
+        if resize:
+            logger.debug("Resizing screen to fit layout ...")
+            origin = (self.margin, self.margin)
+            self.w = layout.w + 2*self.margin
+            self.h = layout.h + 2*self.margin
+
+        #Move layout
+        if origin:
+            layout.x, layout.y = origin
+        #If no origin, use top and center
+        else:
+            layout.y = self.margin
+            layout.recenter(x=self.center[0])
+
+        #Check screen size
+        if layout.right  > self.right or layout.bottom > self.h:
+            logger.warning("Layout exceeds the boundary of the screen")
+
+        self.parent.widgets = [layout]
