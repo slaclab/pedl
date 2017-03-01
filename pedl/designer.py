@@ -88,7 +88,7 @@ class Designer:
         return widgets
 
 
-    def setLayout(self, layout, origin=None):
+    def setLayout(self, layout, origin=(5,5)):
         """
         Set the main layout
 
@@ -105,8 +105,6 @@ class Designer:
         """
         if not isinstance(layout, Layout):
             raise TypeError('Must provide a Layout object')
-
-        if not origin:
 
         layout.x, layout.y = origin
         self.widgets = [layout]
