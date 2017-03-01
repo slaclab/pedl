@@ -88,7 +88,7 @@ class Designer:
         return widgets
 
 
-    def setLayout(self, layout, origin = (5,5)):
+    def setLayout(self, layout, origin=None):
         """
         Set the main layout
 
@@ -105,6 +105,8 @@ class Designer:
         """
         if not isinstance(layout, Layout):
             raise TypeError('Must provide a Layout object')
+
+        if not origin:
 
         layout.x, layout.y = origin
         self.widgets = [layout]
@@ -124,7 +126,7 @@ class Designer:
         edl : str
             Text that will be put into the edl file
         """
-        edl = ''
+        edl = []
 
         if isinstance(obj, Layout):
             widgets = obj.widgets
@@ -135,7 +137,7 @@ class Designer:
         for widget in widgets:
             if isinstance(widget, Layout):
                 logger.debug('Rendering child layout ...')
-                edl += self.render_object(widget)
+                edl.append(self.render_object(widget))
 
             else:
                 logger.debug('Rendering widget {} ...'.format(widget.name))
@@ -147,9 +149,9 @@ class Designer:
                     raise WidgetError('Widget {} has non-existant template {}'
                                       ''.format(widget.name, widget.template))
 
-                edl += template.render(widget=widget)
+                edl.append(template.render(widget=widget))
 
-        return edl
+        return '\n\n'.join(edl)
 
 
     def show(self, wd=None, wait=True, **kwargs):
