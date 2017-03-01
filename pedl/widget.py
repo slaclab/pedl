@@ -239,6 +239,6 @@ class Screen(PedlObject):
         """
         return self._foreground
 
-    @background.setter
+    @foreground.setter
     def foreground(self, color):
         self._foreground = ColorChoice(color)
