@@ -1,0 +1,5 @@
+{% extends 'button.edl' %}
+{% block button %}
+controlPv {{widget.Pv}}
+pressValue {{widget.value}}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'widget.edl' %}
+{% block properties %}
+fgColor index {{widget.fontColor.value}}
+{% if widget.widgetClass != 'activeMessageButton' %}
+bgColor index {{widget.fill.value}}
+{% else %}
+onColor index {{widget.fill.value}}
+offColor index {{widget.fill.value}}
+{% endif %}
+topShadowColor index {{widget.lineColor.value}}
+botShadowColor index {{widget.lineColor.value}}
+font {{widget.font.tag}}
+{% if widget.invisible %}invisible
+{% endif %}
+{% block button %}{% endblock button%}
+{% endblock %}
