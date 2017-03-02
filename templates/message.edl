@@ -1,5 +1,7 @@
 {% extends 'button.edl' %}
 {% block button %}
-controlPv {{widget.Pv}}
+controlPv {{widget.control}}
 pressValue {{widget.value}}
+onLabel {{widget.label}}
+offLabel {{widget.label}}
 {% endblock %}

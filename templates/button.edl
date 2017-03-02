@@ -1,7 +1,7 @@
 {% extends 'widget.edl' %}
 {% block properties %}
 fgColor index {{widget.fontColor.value}}
-{% if widget.widgetClass != 'activeMessageButton' %}
+{% if widget.widgetClass != 'activeMessageButtonClass' %}
 bgColor index {{widget.fill.value}}
 {% else %}
 onColor index {{widget.fill.value}}

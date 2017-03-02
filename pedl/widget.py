@@ -46,7 +46,6 @@ class PedlObject:
                         dimension,
                         kwargs[dimension])
 
-        self._fill = None
 
     @property
     def x(self):
