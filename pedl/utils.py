@@ -1,3 +1,95 @@
+"""
+PEDL Utilities
+"""
+############
+# Standard #
+############
+import os
+import logging
+import subprocess
+from distutils.spawn import find_executable
+###############
+# Third Party #
+###############
+
+
+##########
+# Module #
+##########
+
+logger = logging.getLogger(__name__)
+
+
+def launch(path, wait=True, wd=None, **kwargs):
+    """
+    Launch an EDL file
+
+    Parameters
+    ----------
+    path : str
+        Path to file
+
+    wd : str, optional
+        Working directory to launch screen, otherwise the current directory
+        is used
+
+    wait : bool, optional
+        Block the main thread while the EDM preview is open
+
+    kwargs : optional
+        Represent EDM macros as keyword arguments
+
+    Returns
+    -------
+    proc : ``subprocess.Popen``
+        Process containing EDM launch
+
+    Raises
+    ------
+    FileNotFoundError:
+        If the .edl file does not exist
+
+    OSError:
+        If the ``edm`` executable is not in the system path
+
+     Example
+    -------
+    .. code::
+
+        edm_proc = launch('path/to/my.edl', MACRO='TST:MACRO')
+    """
+    if not os.path.exists(path):
+        raise FileNotFoundError(path)
+
+    edm_args = ['edm', '-x', '-eolc']
+
+    if kwargs:
+        edm_args.append(','.join(['='.join([key,value])
+                        for (key,value) in kwargs.items()]))
+
+    edm_args.append(path)
+
+    try:
+        logger.debug("Launching {} with the following command {}"
+                     "".format(path, edm_args))
+        proc = subprocess.Popen(edm_args, cwd=wd, stdout=None)
+
+        if wait:
+            proc.wait()
+
+    except OSError:
+        if not find_executable('edm'):
+            raise OSError('EDM is not in current environment')
+
+        raise
+
+    except KeyboardInterrupt:
+        print('Preview aborted ...')
+        proc.terminate()
+
+    return proc
+
+
 class Visibility:
     """
     Visibility Settings for Widget

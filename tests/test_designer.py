@@ -69,10 +69,10 @@ def test_widget_render():
 def test_launch():
     d    = pedl.Designer()
     with pytest.raises(FileNotFoundError):
-        d.launch('NOT.edl')
+        pedl.launch('NOT.edl')
 
     edl  = os.path.join(os.path.dirname(os.path.abspath(__file__)),'test.edl')
-    proc = d.launch(edl, MACRO='TST:MACRO',wait=False)
+    proc = pedl.launch(edl, MACRO='TST:MACRO',wait=False)
     assert not proc.poll()
     proc.terminate()
     #Wait for process to die

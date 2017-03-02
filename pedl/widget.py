@@ -1,6 +1,6 @@
-from .visibility import Visibility
-from .choices    import ColorChoice
-from .errors     import DesignerError
+from .utils   import Visibility
+from .choices import ColorChoice
+from .errors  import DesignerError
 
 class PedlObject:
     """
