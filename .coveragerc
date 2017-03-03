@@ -4,3 +4,6 @@ source =
 [report]
 omit =
    */tests/*
+   #Ignore _version and versioneer
+   .*version.*
+   *_version.py
