@@ -12,6 +12,7 @@
    :caption: Widget Types
 
    shape.rst
+   button.rst
 
 .. toctree::
    :maxdepth: 1
