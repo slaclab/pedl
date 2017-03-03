@@ -67,3 +67,24 @@ pressValue 0
 onLabel here
 offLabel here
 endObjectProperties"""
+
+
+menu_edl ="""\
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 24
+y 148
+w 200
+h 105
+fgColor index 14
+bgColor index 4
+topShadowColor index 14
+botShadowColor index 14
+inconsistentColor index 4
+font helvetica-medium-r-18.0
+controlPv PV:FAKE
+endObjectProperties"""
