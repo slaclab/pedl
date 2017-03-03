@@ -15,9 +15,9 @@ import logging
 # Module #
 ##########
 from .shape    import Shape
-from ..choices import ColorChoice, FontChoice
-from ..font    import Font
+from ..utils   import Font
 from ..layout  import StackLayout
+from ..choices import ColorChoice, FontChoice
 
 logger = logging.getLogger(__name__)
 

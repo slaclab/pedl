@@ -1,8 +1,7 @@
 from .               import choices
-from .font           import Font
 from .widget         import Widget
 from .widgets.shape  import Rectangle, Circle
-from .utils          import Visibility, launch
+from .utils          import Font, Visibility, launch
 from .designer       import Designer
 from .layout         import VBoxLayout, HBoxLayout, StackLayout
 

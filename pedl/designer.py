@@ -6,12 +6,11 @@ import tempfile
 from jinja2 import Environment, FileSystemLoader
 from jinja2 import TemplateNotFound
 
-from .font    import Font
 from .widget  import PedlObject, Screen, Widget
 from .errors  import WidgetError
 from .choices import FontChoice
 from .layout  import Layout
-from .utils   import launch
+from .utils   import Font, launch
 logger = logging.getLogger(__name__)
 
 class Designer:
