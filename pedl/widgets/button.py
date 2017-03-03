@@ -24,9 +24,16 @@ logger = logging.getLogger(__name__)
 
 class Button(Shape):
     
+    #Defaults
     _fontColor = ColorChoice.Black
     _font      = Font(font=FontChoice.Helvetica, size=18)
     _invisible = False
+    _fill      = ColorChoice.Grey
+    _lineColor = None
+
+    def __init__(self, control=None, **kwargs):
+        self.control = control
+        super().__init__(**kwargs)
 
     @property
     def font(self):
@@ -76,8 +83,8 @@ class Button(Shape):
     def lineColor(self, color):
         if color:
             self._lineColor = ColorChoice(color)
-
-        self._lineColor = None
+        else:
+            self._lineColor = None
 
 
     #Reimplementation so fill can not be None
@@ -108,7 +115,7 @@ class Button(Shape):
 
 
     @classmethod
-    def buttonize(cls, obj, **kwargs):
+    def buttonize(cls, obj, invisible=True, **kwargs):
         """
         Create a :class:`.StackLayout` that turns an existing widget into a
         button
@@ -118,6 +125,9 @@ class Button(Shape):
         obj : :class:`.Widget` or :class:`.Layout`
             Layout or Widget to create transform into a button
 
+        invisible : bool, optional
+            Whether to hide the button or not
+
         kwargs : 
             Define additional button specific keyword arguments. These can not
             include any parameter involving the geometry
@@ -125,11 +135,12 @@ class Button(Shape):
         Returns
         -------
         :class:`.StackLayout`
-            StackLayout with an invisible button behind it of matching geometry
+            StackLayout with an button behind it of matching geometry
         """
         #Create Button
         button = cls(x=obj.x,y=obj.y, w=obj.w, h=obj.h, **kwargs)
-        button.invisible = True
+        if invisible:
+            button.invisible = True
 
         #Create Layout
         l = StackLayout()
@@ -171,13 +182,10 @@ class MessageButton(Button):
 
     #Defaults
     _label     = None
-    _fill      = ColorChoice.Grey
-    _lineColor = None
 
-    def __init__(self, value=None, control=None, label=None, **kwargs):
+    def __init__(self, value=None, label=None, **kwargs):
         super().__init__(**kwargs)
         self.value   = value
-        self.control = control
         self.label   = label
 
 
@@ -196,3 +204,77 @@ class MessageButton(Button):
         else:
             self._label = value
 
+
+class MenuButton(Button):
+    """
+    MenuButton Widget
+
+    This widget offers control over any Enum PV with a dropdown menu
+
+    Parameters
+    ----------
+    control : str
+        The Enum PV to associate with the menu button
+    """
+    #Templating information
+    widgetClass = 'activeMenuButtonClass'
+    major    = 4
+    minor    = 0
+    release  = 0
+    template = 'button.edl'
+    
+    #Defaults
+    _invisible = False
+
+    @property
+    def invisible(self):
+        return self._invisible
+
+    @invisible.setter
+    def invisible(self, val):
+        raise NotImplementedError('MenuButton can not be made invisible, '
+                                  'use the blend method to make it match '
+                                  'the screen background')
+
+
+    def blend(self, color=ColorChoice.Grey):
+        """
+        Make the MenButton all one uniform color
+        """
+        self.lineColor = ColorChoice(color)
+        self.fill      = ColorChoice(color)
+        self.fontColor = ColorChoice(color)
+
+
+    @classmethod
+    def buttonize(cls, obj, blend=ColorChoice.Grey, **kwargs):
+        """
+        Create a :class:`.StackLayout` that turns an existing widget into a
+        button
+
+        Parameters
+        ----------
+        obj : :class:`.Widget` or :class:`.Layout`
+            Layout or Widget to create transform into a button
+
+        blend : :class:`.ColorChoice`
+            Make MenuButton monocolor to match a background. Set to None, to
+            use default Widget coloring
+
+        kwargs :
+            Define additional button specific keyword arguments. These can not
+            include any parameter involving the geometry
+
+        Returns
+        -------
+        :class:`.StackLayout`
+            StackLayout with a button behind it of matching geometry
+        """
+        #Create layout
+        l = super().buttonize(obj, invisible=False, **kwargs)
+
+        #Color MenuButton
+        if blend:
+            l.widgets[0].blend(blend)
+
+        return l
