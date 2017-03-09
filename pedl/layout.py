@@ -128,6 +128,18 @@ class Layout(PedlObject):
         self._rearrange()
 
 
+    def addWidgets(self, *args):
+        """
+        Add a series of widgets to the layout
+
+        Parameters
+        ----------
+        *args : class:`.Widget`s
+            Series of widgets to add
+        """
+        list(map(lambda w : self.addWidget(w), args))
+
+
     def addLayout(self, layout):
         """
         Add a child layout
