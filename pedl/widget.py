@@ -1,8 +1,40 @@
-from .utils   import Visibility
+from .utils   import pedlproperty, Visibility
 from .choices import ColorChoice
 from .errors  import DesignerError
 
-class PedlObject:
+from copy import copy
+import six
+class PedlMeta(type):
+
+    def __new__(cls, name, bases, clsdict):
+        #Create new PedlObject
+        clsobj = super().__new__(cls, name, bases, clsdict)
+        #Storage for pedlproperty info
+        clsobj._pedl      = dict()
+
+        #Find all child properties
+        for base in reversed(bases):
+
+            if not hasattr(base, '_pedl'):
+                continue
+
+            for attr, prop in base._pedl.items():
+                clsobj._pedl[attr] = prop
+
+        #Find all pedlproperties
+        for attr, value in clsdict.items():
+            if isinstance(value, pedlproperty):
+                #Store record of pedl properities
+                clsobj._pedl[attr] = value
+
+        #Notify property of the attribute name
+        for attr, prop in clsobj._pedl.items():
+            prop.attr = attr
+
+        return clsobj
+
+
+class PedlObject(six.with_metaclass(PedlMeta, object)):
     """
     Basic PEDL Class
 
@@ -29,22 +61,28 @@ class PedlObject:
     widgetClass = None
     _x   = 0
     _y   = 0
-    _w   = 0
-    _h   = 0
+
+    w = pedlproperty(int, default=0, doc='Width  of the widget')
+    h = pedlproperty(int, default=0, doc='Height of the widget')
 
     def __init__(self, name=None, parent=None, **kwargs):
         if not name:
             name = self.widgetClass
 
-        self.name   = name
-        self.parent = parent
+        self.name       = name
+        self.parent     = parent
 
-        #Set Dimensions
-        for dimension in ('x','y','w','h'):
-            if dimension in kwargs:
-                setattr(self,
-                        dimension,
-                        kwargs[dimension])
+        #Store default value within the class
+        self.attributes = dict((prop.attr, prop.default) for prop in
+                                self._pedl.values())
+
+        #Update kwargs 
+        for key, val in kwargs.items():
+            try:
+                setattr(self, key, val)
+
+            except AttributeError:
+                raise TypeError('Got unexpected keyword {}'.format(key))
 
 
     @property
@@ -70,30 +108,29 @@ class PedlObject:
     def y(self, val):
         self._y = int(val)
 
-
-    @property
-    def w(self):
-        """
-        Width of the Widget
-        """
-        return self._w
-
-    @w.setter
-    def w(self, val):
-        self._w = int(val)
-    
-    
-    @property
-    def h(self):
-        """
-        Height of the Widget
-        """
-        return self._h
-
-    @h.setter
-    def h(self, val):
-        self._h = int(val)
-
+#    @property
+#    def w(self):
+#        """
+#        Width of the Widget
+#        """
+#        return self._w
+#
+#    @w.setter
+#    def w(self, val):
+#        self._w = int(val)
+##    
+#    
+#    @property
+#    def h(self):
+#        """
+#        Height of the Widget
+#        """
+#        return self._h
+#
+#    @h.setter
+#    def h(self, val):
+#        self._h = int(val)
+#
 
     @property
     def center(self):
@@ -181,7 +218,7 @@ class Widget(PedlObject):
     template = 'widget.edl'
 
     _colorPV = None
-
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -206,6 +243,7 @@ class Widget(PedlObject):
     @colorPV.setter
     def colorPV(self, value):
         self._colorPV = value
+    
 
 
 class Screen(PedlObject):
@@ -225,9 +263,11 @@ class Screen(PedlObject):
     #Default Settings
     _background = ColorChoice.Grey
     _foreground = ColorChoice.Black
-    _w = 750
-    _h = 1100
 
+    w = copy(PedlObject.w)
+    h = copy(PedlObject.h)
+    w.default = 750
+    h.default = 1100
     @property
     def background(self):
         """
