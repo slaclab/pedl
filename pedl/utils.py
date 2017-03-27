@@ -302,3 +302,25 @@ class Font:
                                              self.italicized,
                                              self.bold,
                                             )
+
+
+class pedlproperty:
+
+    def __init__(self, _type, default=None, fset=None, doc=None):
+        #Internal storage
+        self._type = _type
+        self._fset = fset
+        self.__doc__ =  doc
+        self.default = default
+
+    def __get__(self, instance, owner):
+        if instance is None:
+            return self
+
+        return instance.attributes[self.attr]
+
+    def __set__(self, instance, value):
+        if self._fset:
+            value = self.fset(value)
+
+        instance.attributes[self.attr] = value 
