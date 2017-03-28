@@ -59,11 +59,11 @@ class PedlObject(six.with_metaclass(PedlMeta, object)):
         Height
     """
     widgetClass = None
-    _x   = 0
-    _y   = 0
-
+    
     w = pedlproperty(int, default=0, doc='Width  of the widget')
     h = pedlproperty(int, default=0, doc='Height of the widget')
+    x = pedlproperty(int, default=0, doc='Horizontal position of the widget')
+    y = pedlproperty(int, default=0, doc='Vertical position of the widget')
 
     def __init__(self, name=None, parent=None, **kwargs):
         if not name:
@@ -81,57 +81,9 @@ class PedlObject(six.with_metaclass(PedlMeta, object)):
             try:
                 setattr(self, key, val)
 
-            except AttributeError:
-                raise TypeError('Got unexpected keyword {}'.format(key))
-
-
-    @property
-    def x(self):
-        """
-        Starting position of the left side of the Widget
-        """
-        return self._x
-
-    @x.setter
-    def x(self, val):
-        self._x = int(val)
-
-
-    @property
-    def y(self):
-        """
-        Starting position of the top of the widget
-        """
-        return self._y
-
-    @y.setter
-    def y(self, val):
-        self._y = int(val)
-
-#    @property
-#    def w(self):
-#        """
-#        Width of the Widget
-#        """
-#        return self._w
-#
-#    @w.setter
-#    def w(self, val):
-#        self._w = int(val)
-##    
-#    
-#    @property
-#    def h(self):
-#        """
-#        Height of the Widget
-#        """
-#        return self._h
-#
-#    @h.setter
-#    def h(self, val):
-#        self._h = int(val)
-#
-
+            except AttributeError as e:
+#                raise TypeError('Got unexpected keyword {}'.format(key))
+                print("Sending to next level {}".format(e))
     @property
     def center(self):
         """
@@ -217,8 +169,7 @@ class Widget(PedlObject):
     release  = 1
     template = 'widget.edl'
 
-    _colorPV = None
-    
+    colorPV = pedlproperty(str, doc="PV to control widget color")
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -233,63 +184,35 @@ class Widget(PedlObject):
         """
         return self.visibility.valid
 
-    @property
-    def colorPV(self):
-        """
-        Color PV to change fill based on different statuses
-        """
-        return self._colorPV
-
-    @colorPV.setter
-    def colorPV(self, value):
-        self._colorPV = value
-    
-
 
 class Screen(PedlObject):
     """
     Control over EDM Screen Parameters
-    
+
     Attributes
     ----------
     margin : int
         Margin sizes for the screen
     """
+    #Template properties
     template    = 'window.edl'
     minor       = 0
     release     = 1
     margin      = 5
 
-    #Default Settings
-    _background = ColorChoice.Grey
-    _foreground = ColorChoice.Black
+    #PEDL properties
+    background = pedlproperty(ColorChoice, default=ColorChoice.Grey,
+                              doc='Background color of the EDM screen ' 
+                                   'as a :class:`.ColorChoice')
+    foreground = pedlproperty(ColorChoice, default=ColorChoice.Black,
+                              doc='Foreground color of the EDM screen ' 
+                                   'as a :class:`.ColorChoice')
 
+    #Change default settings
     w = copy(PedlObject.w)
     h = copy(PedlObject.h)
     w.default = 750
     h.default = 1100
-    @property
-    def background(self):
-        """
-        Background color of EDM screen as a :class:`.ColorChoice`
-        """
-        return self._background
-
-    @background.setter
-    def background(self, color):
-        self._background = ColorChoice(color)
-
-    @property
-    def foreground(self):
-        """
-        Foreground color of EDM screen as a :class:`.ColorChoice`
-        """
-        return self._foreground
-
-    @foreground.setter
-    def foreground(self, color):
-        self._foreground = ColorChoice(color)
-
 
     def setLayout(self, layout, resize=False, origin=None):
         """
@@ -311,7 +234,7 @@ class Screen(PedlObject):
 
         origin : tuple, optional
             (x,y) location for the top left corner of the layout
-        
+
         Raises
         ------
         DesignerError:
