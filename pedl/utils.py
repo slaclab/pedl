@@ -306,21 +306,64 @@ class Font:
 
 class pedlproperty:
 
-    def __init__(self, _type, default=None, fset=None, doc=None):
-        #Internal storage
-        self._type = _type
-        self._fset = fset
-        self.__doc__ =  doc
+    def __init__(self, _type, default=None,
+                 fset=None, fget=None,
+                 cb=None, doc=None):
+        #Property information
+        self.type    = _type
+        self.cb      = cb
         self.default = default
+        #Getter and Setter methods
+        self.fget = fget
+        self.fset = fset
+        #Store docstring internally
+        self.__doc__ =  doc
+
 
     def __get__(self, instance, owner):
-        if instance is None:
-            return self
+        #Allow override of get method
+        if self.fget:
+            self.fget(instance, owner)
 
-        return instance.attributes[self.attr]
+        else:
+            #If requesting class attribute, return pedlproperty
+            if instance is None:
+                return self
+
+            #Otherwise, lookup in instance dictionary
+            return instance.attributes[self.attr]
+
 
     def __set__(self, instance, value):
-        if self._fset:
-            value = self.fset(value)
+        #Allow override of set method
+        if self.fset:
+            self.fset(instance, value)
 
-        instance.attributes[self.attr] = value 
+        #Enforce value
+        else:
+            if value is not None:
+                value = self.type(value)
+
+            #Store previous value for comparison
+            previous = instance.attributes.get(self.attr)
+            instance.attributes[self.attr] = value 
+
+            #Run callback on value changed
+            if previous != value and self.cb:
+                self.cb(instance)
+
+
+    def getter(self, fget):
+        return type(self)(self.type, default=self.default,
+                          fget=fget, fset=self.fset,
+                          cb=self.cb, doc=self.__doc__)
+
+    def setter(self, fset):
+        return type(self)(self.type, default=self.default,
+                          fget=self.fget, fset=fset,
+                          cb=self.cb, doc=self.__doc__)
+
+    def callback(self, cb):
+        return type(self)(self.type, default=self.default,
+                          fget=self.fget, fset=self.fset,
+                          cb=cb, doc=self.__doc__)
