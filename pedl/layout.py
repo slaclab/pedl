@@ -13,9 +13,22 @@ nest layouts inside of each other. This allows the user to maintain a master
 layout composed of widgets and smaller layouts that can then be applied to a
 widget by using the :meth:`.Designer.setLayout`
 """
+####################
+# Standard Library #
+####################
+import copy
 import logging
+
+####################
+#    Third Party   #
+####################
+
+####################
+#     Package      #
+####################
 from .widget  import Widget, PedlObject
 from .choices import AlignmentChoice
+from .utils import pedlproperty
 
 logger = logging.getLogger(__name__)
 
@@ -29,11 +42,15 @@ class Layout(PedlObject):
     y : int, optional
         Starting Y position of the layout
     """
-    _spacing   = 5
-    _alignment = None
-    def __init__(self,x=0, y=0):
+    x = copy.copy(PedlObject.x)
+    y = copy.copy(PedlObject.y)
+
+    spacing   = pedlproperty(int, default=5,  doc='Spacing between widgets')
+    alignment = pedlproperty(AlignmentChoice, doc='Alignment of Layout')
+
+    def __init__(self, **kwargs):
         self.widgets = list()
-        super().__init__(x=x,y=y)
+        super().__init__(**kwargs)
 
 
     @property
@@ -53,57 +70,33 @@ class Layout(PedlObject):
         return (max([w.bottom for w in self.widgets])
               - min([w.y      for w in self.widgets]))
 
-    @property
+    @x.callback
     def x(self):
-        """
-        Horizontal position
-        """
-        return super().x
+        if self.widgets:
+            #Move first widget
+            self.widgets[0].x = self.x
+            #Rearrange following widgets
+            self.shuffle()
 
 
-    @x.setter
-    def x(self, value):
-        if value != self.x:
-            #Set position internally
-            super(Layout, self.__class__).x.fset(self, value)
-            if self.widgets:
-                #Move first widget
-                self.widgets[0].x = value
-                #Rearrange following widgets
-                self._rearrange()
-
-    @property
+    @y.callback
     def y(self):
-        """
-        Vertical position
-        """
-        return super().y
-
-    @y.setter
-    def y(self, value):
-        if value != self.y:
-            #Set position internally
-            super(Layout, self.__class__).y.fset(self, value)
-            if self.widgets:
-                #Move first widget
-                self.widgets[0].y = value
-                #Rearrange following widgets
-                self._rearrange()
+        if self.widgets:
+            #Move first widget
+            self.widgets[0].y = self.y
+            #Rearrange following widgets
+            self.shuffle()
 
 
-    @property
+    @alignment.callback
+    def alignment(self):
+        print('here')
+        self.shuffle()
+    
+    @spacing.callback
     def spacing(self):
-        """
-        Spacing between widgets
-        """
-        return self._spacing
-
-
-    @spacing.setter
-    def spacing(self, value):
-        if value != self.spacing:
-            self._spacing = int(value)
-            self._rearrange()
+        print('running')
+        self.shuffle()
 
 
     def addWidget(self, widget):
@@ -125,7 +118,7 @@ class Layout(PedlObject):
         self.widgets.append(widget)
 
         #Redraw
-        self._rearrange()
+        self.shuffle()
 
 
     def addWidgets(self, *args):
@@ -159,25 +152,10 @@ class Layout(PedlObject):
         self.widgets.append(layout)
 
         #Redraw
-        self._rearrange()
+        self.shuffle()
 
 
-    @property
-    def alignment(self):
-        """
-        Alignment of the Layout selected from :class:`.AlignmentChoice`
-        """
-        return self._alignment
-
-
-    @alignment.setter
-    def alignment(self, align):
-        if align != self.alignment:
-            self._alignment = AlignmentChoice(align)
-            self._rearrange()
-
-
-    def _rearrange(self):
+    def shuffle(self):
         """
         Rearrange all of the  child widgets
         """
@@ -186,15 +164,17 @@ class Layout(PedlObject):
         if self.parent:
             logger.debug("Triggered rearrangement of parent layout {}"
                          "".format(self.parent))
-            self.parent._rearrange()
+            self.parent.shuffle()
 
 
 class HBoxLayout(Layout):
     """
     Layout for horizontally placed widgets
     """
-    _alignment = AlignmentChoice.Top
-    def _rearrange(self):
+    alignment = copy.copy(Layout.alignment)
+    alignment.default = AlignmentChoice.Top
+
+    def shuffle(self):
         next_widget = self.x
 
         if self.alignment not in (AlignmentChoice.Top,
@@ -219,15 +199,17 @@ class HBoxLayout(Layout):
             next_widget += widget.w + self.spacing
         
         #Rearrange parent layout
-        super()._rearrange()
+        super().shuffle()
 
 
 class VBoxLayout(Layout):
     """
     Layout for vertically placed widgets
     """
-    _alignment = AlignmentChoice.Left
-    def _rearrange(self):
+    alignment = copy.copy(Layout.alignment)
+    alignment.default = AlignmentChoice.Left
+
+    def shuffle(self):
         next_widget = self.y
         
         if self.alignment not in (AlignmentChoice.Left,
@@ -250,57 +232,60 @@ class VBoxLayout(Layout):
             next_widget += widget.h + self.spacing
 
         #Rearrange parent layout
-        super()._rearrange()
+        super().shuffle()
 
 class StackLayout(Layout):
     """
     Layout for widgets placed on top of each other
+
+    The alignment specification works slightly differently in the case of the
+    stack layout, because there are two possible axes to specify. This
+    means that you may enter an list of Alignment options to be more
+    specific in your widget placement. By default, no option is given for
+    an axis, the layout assumes you want the widgets centered
+
+    Example
+    -------
+    .. code::
+
+        #Centered on both axes
+        layout.alignment = AlignmentChoice.Center
+
+        #Top-Right Corner
+        layout.alignment = [AlignmentChoice.Top, AlignmentChoice.Right]
+
+        #Left-Side Aligned, Centered in Vertical
+        layout.alignment = [AlignmentChoice.Left]
     """
-    _spacing   = None
-    _alignment = [AlignmentChoice.Center]
+    alignment = copy.copy(Layout.alignment)
+    alignment.default = [AlignmentChoice.Center]
 
-    #This is annoying I have to do this to super setter method 
-    @property
-    def alignment(self):
-        """
-        List of alignments
-
-        The alignment specification works slightly differently in the case of the
-        stack layout, because there are two possible axes to specify. This
-        means that you may enter an list of Alignment options to be more
-        specific in your widget placement. By default, no option is given for
-        an axis, the layout assumes you want the widgets centered
-
-        Example
-        -------
-        .. code::
-
-            #Centered on both axes
-            layout.alignment = AlignmentChoice.Center
-
-            #Top-Right Corner
-            layout.alignment = [AlignmentChoice.Top, AlignmentChoice.Right]
-
-            #Left-Side Aligned, Centered in Vertical
-            layout.alignment = [AlignmentChoice.Left]
-        """
-        return self._alignment
-
+    spacing   = copy.copy(Layout.spacing)
+    spacing.default = None
 
     @alignment.setter
     def alignment(self, align):
-        if align != self._alignment:
 
-            try:
-                self._alignment = [AlignmentChoice(a) for a in align]
+        try:
+            align = [AlignmentChoice(a) for a in align]
 
-            except TypeError:
-                self._alignment = [AlignmentChoice(align)]
+        except TypeError:
+            align = [AlignmentChoice(align)]
 
-            self._rearrange()
+        print(align)
+        if align != self.attributes.get('alignment'):
+            self.attributes['alignment'] = align
+            self.shuffle()
 
 
-    def _rearrange(self):
+    @spacing.setter
+    def spacing(self, spacing):
+        if spacing:
+            raise ValueError('Stacked Layout can not have non-zero spacing')
+
+        self.attributes['spacing'] = spacing
+
+    def shuffle(self):
         ld = self.widgets[0]
 
         for w in self.widgets:
@@ -326,17 +311,4 @@ class StackLayout(Layout):
                 w.recenter(y=ld.center[1])
 
         #Rearrange parent layout
-        super()._rearrange()
-
-
-
-    #This is annoying I have to do this to super setter method 
-    @property
-    def spacing(self):
-        return super().spacing
-
-
-    @spacing.setter
-    def spacing(self, value):
-        raise NotImplementedError
-
+        super().shuffle()
