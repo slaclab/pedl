@@ -166,7 +166,7 @@ def test_stack_layout():
     #Adjust Spacing
     assert l.spacing == None
     
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(ValueError):
         l.spacing = 4
 
     #Adjust Alignments
