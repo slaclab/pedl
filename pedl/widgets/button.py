@@ -4,6 +4,7 @@ Support for the variety of buttons contained within EDM
 ############
 # Standard #
 ############
+import copy
 import logging
 
 ###############
@@ -15,7 +16,7 @@ import logging
 # Module #
 ##########
 from .shape    import Shape
-from ..utils   import Font
+from ..utils   import Font, pedlproperty
 from ..layout  import StackLayout
 from ..choices import ColorChoice, FontChoice
 
@@ -23,17 +24,30 @@ logger = logging.getLogger(__name__)
 
 
 class Button(Shape):
-    
-    #Defaults
-    _fontColor = ColorChoice.Black
-    _font      = Font(font=FontChoice.Helvetica, size=18)
-    _invisible = False
-    _fill      = ColorChoice.Grey
-    _lineColor = None
+
+    #PEDL properties
+    fontColor = pedlproperty(int, default=ColorChoice.Black,
+                             doc='Color of the font inside the button')
+    invisible = pedlproperty(int, default=False,
+                             doc='The visibility of the button, if set to '
+                                 'True, the button will still be clickable, '
+                                 'but will not be seen by the user until '
+                                 'moused over')
+    fill      = pedlproperty(ColorChoice, default=ColorChoice.Grey,
+                             doc= 'Fill color of the Widget')
+    lineColor = pedlproperty(ColorChoice,
+                             doc= 'Color of the border surrounding the button')
+
+    #Font Choice
+    _font = Font(font=FontChoice.Helvetica, size=18)
 
     def __init__(self, control=None, **kwargs):
         self.control = control
         super().__init__(**kwargs)
+
+        #Make border disappear if set to None
+        if not self.lineColor:
+            self.lineColor = self.fill
 
     @property
     def font(self):
@@ -49,70 +63,10 @@ class Button(Shape):
 
         self._font = font
 
-
-    @property
-    def fontColor(self):
-        """
-        Color of the font inside the button
-        """
-        return self._fontColor
-
-    @fontColor.setter
-    def fontColor(self, font):
-        self._fontColor = ColorChoice(font)
-
     @property
     def lineWidth(self):
         raise NotImplementedError("Button frame can only be modifed "
                                   "using lineColor attribute.")
-
-
-    @property
-    def lineColor(self):
-        """
-        Color of the border surrounding the button
-       
-        If set to None, the border surrounding the button will be non-existant
-        """
-        if not self._lineColor:
-            return self.fill
-
-        return self._lineColor
-
-    @lineColor.setter
-    def lineColor(self, color):
-        if color:
-            self._lineColor = ColorChoice(color)
-        else:
-            self._lineColor = None
-
-
-    #Reimplementation so fill can not be None
-    @property
-    def fill(self):
-        """
-        Fill color of the Widget
-        """
-        return self._fill
-
-    @fill.setter
-    def fill(self, color):
-        self._fill = ColorChoice(color)
-
-
-    @property
-    def invisible(self):
-        """
-        The visibility of the button, if set to True, the button will still be
-        clickable, but won't be seen by the user until moused over
-        """
-        return self._invisible
-
-
-    @invisible.setter
-    def invisible(self, value):
-        self._invisible = int(value)
-
 
     @classmethod
     def buttonize(cls, obj, invisible=True, **kwargs):
@@ -181,28 +135,12 @@ class MessageButton(Button):
     template    = 'message.edl'
 
     #Defaults
-    _label     = None
+    label = pedlproperty(str, default='', doc='Label of Button')
 
     def __init__(self, value=None, label=None, **kwargs):
         super().__init__(**kwargs)
         self.value   = value
         self.label   = label
-
-
-    @property
-    def label(self):
-        """
-        Label for the face of the button. If set to None, the button will be
-        blank
-        """
-        return self._label
-
-    @label.setter
-    def label(self, value):
-        if not value:
-            self._label = ''
-        else:
-            self._label = value
 
 
 class MenuButton(Button):
@@ -222,20 +160,17 @@ class MenuButton(Button):
     minor    = 0
     release  = 0
     template = 'button.edl'
-    
-    #Defaults
-    _invisible = False
 
-    @property
-    def invisible(self):
-        return self._invisible
+    invisible = copy.copy(Button.invisible)
 
     @invisible.setter
     def invisible(self, val):
-        raise NotImplementedError('MenuButton can not be made invisible, '
-                                  'use the blend method to make it match '
-                                  'the screen background')
-
+        if val:
+            raise ValueError('MenuButton can not be made invisible, '
+                             'use the blend method to make it match '
+                             'the screen background')
+        else:
+            self.val = int(val)
 
     def blend(self, color=ColorChoice.Grey):
         """
