@@ -16,6 +16,9 @@ from .utils   import pedlproperty, Visibility
 from .choices import ColorChoice
 from .errors  import DesignerError
 
+
+logger = logging.getLogger(__name__)
+
 class PedlMeta(type):
 
     def __new__(cls, name, bases, clsdict):
@@ -50,6 +53,8 @@ class PedlObject(six.with_metaclass(PedlMeta, object)):
     """
     Basic PEDL Class
 
+    The generic class for any object that is rendered by pedl. This 
+    
     Parameters
     ----------
     name   : str , optional
@@ -58,30 +63,18 @@ class PedlObject(six.with_metaclass(PedlMeta, object)):
     parent : ``PedlObject``, optional
         Parent of object
 
-    x : int, optional
-        Horizontal Position
-
-    y : int, optional
-        Vertical Position
-
-    w : int, optional
-        Width
-
-    h : int, optional
-        Height
+    attributes : dict
+        All properties that are directly interepreted by a pedl template
     """
     widgetClass = None
     
-    w = pedlproperty(int, default=0, doc='Width  of the widget')
+    w = pedlproperty(int, default=0, doc='Width of the widget')
     h = pedlproperty(int, default=0, doc='Height of the widget')
     x = pedlproperty(int, default=0, doc='Horizontal position of the widget')
     y = pedlproperty(int, default=0, doc='Vertical position of the widget')
 
     def __init__(self, name=None, parent=None, **kwargs):
-        if not name:
-            name = self.widgetClass
-
-        self.name       = name
+        self.name       = name or self.widgetClass
         self.parent     = parent
 
         #Store default value within the class
@@ -94,8 +87,18 @@ class PedlObject(six.with_metaclass(PedlMeta, object)):
                 setattr(self, key, val)
 
             except AttributeError as e:
-#                raise TypeError('Got unexpected keyword {}'.format(key))
-                print("Sending to next level {}".format(e))
+                logger.debug('Found keyword {} not associated with '
+                             '{} attribute'.format(e, self.__class__))
+                                                   
+
+    @property
+    def properties(self):
+        """
+        All pedlproperties
+        """
+        return list(self._pedl.keys())
+
+
     @property
     def center(self):
         """
