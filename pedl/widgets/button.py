@@ -38,11 +38,11 @@ class Button(Shape):
     lineColor = pedlproperty(ColorChoice,
                              doc= 'Color of the border surrounding the button')
 
+    controlPv = pedlproperty(str, doc='Name of the Pv to control')
     #Font Choice
     _font = Font(font=FontChoice.Helvetica, size=18)
 
-    def __init__(self, control=None, **kwargs):
-        self.control = control
+    def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
 
         #Make border disappear if set to None
@@ -113,8 +113,8 @@ class MessageButton(Button):
     """
     MessageButton Widget
 
-    The simplest PV interaction widget, MessageButton sends a single PV a
-    single value when pressed. The Widget will need a value and controlPV to
+    The simplest Pv interaction widget, MessageButton sends a single Pv a
+    single value when pressed. The Widget will need a value and controlPv to
     function properly within EDM
 
     Parameters
@@ -123,7 +123,7 @@ class MessageButton(Button):
         Desired value associated with a press of the button
 
     control : str
-        PV to send ``value``
+        Pv to send ``value``
 
     label : str
         Optional Label to place on the button when visible
@@ -136,23 +136,19 @@ class MessageButton(Button):
 
     #Defaults
     label = pedlproperty(str, default='', doc='Label of Button')
-
-    def __init__(self, value=None, label=None, **kwargs):
-        super().__init__(**kwargs)
-        self.value   = value
-        self.label   = label
+    value = pedlproperty(str, default='', doc='Value to apply to controlPv')
 
 
 class MenuButton(Button):
     """
     MenuButton Widget
 
-    This widget offers control over any Enum PV with a dropdown menu
+    This widget offers control over any Enum Pv with a dropdown menu
 
     Parameters
     ----------
     control : str
-        The Enum PV to associate with the menu button
+        The Enum Pv to associate with the menu button
     """
     #Templating information
     widgetClass = 'activeMenuButtonClass'
