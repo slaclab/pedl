@@ -3,8 +3,8 @@ The :class:`.Designer` is your main entrance point into the ``pedl`` toolkit.
 For those familiar with Qt, this is analagous to your ``QApplication``
 object. Behind the scenes, this is where the magic happens, each widget is
 simply a container for attributes that are then rendered into templates in the
-Designer. The method :meth:`.render_object` can be used to see this in action,
-but for the large part :meth:`.save` and :meth:`show` will do the heavy lifting
+Designer. The method :meth:`.render` can be used to see this in action,
+but for the large part :meth:`.save` and :meth:`exec_` will do the heavy lifting
 for most applications.
 
 For more complicated sets of widgets it is easiest to manage them in sets of
@@ -74,7 +74,7 @@ class Designer:
                                trim_blocks=True, lstrip_blocks=True)
 
 
-    def add_widget(self, widget):
+    def addWidget(self, widget):
         """
         Add a free-floating widget
 
@@ -89,14 +89,14 @@ class Designer:
         self.widgets.append(widget)
 
 
-    @property
-    def all_widgets(self):
+    def findChildren(self, _type=None, name=None):
         """
         All widgets in designer, even those in child layouts
+        
         """
         widgets = []
 
-        #Recursive search of widget tree
+        #Recursive widget search function
         def recursive_widget(widget):
             if isinstance(widget, Layout):
                 for widget in widget.widgets:
@@ -104,13 +104,22 @@ class Designer:
             elif isinstance(widget, Widget):
                 widgets.append(widget)
 
+        #Find all widgets
         for widget in self.widgets:
             recursive_widget(widget)
+
+        #Filter by type
+        if _type:
+            widgets = [w for w in widgets if isinstance(w, _type)]
+
+        #Filter by name
+        if name:
+            widgets = [w for w in widgets if w.name == name]
 
         return widgets
 
 
-    def render_object(self, obj):
+    def render(self, obj):
         """
         Render a ``PedlObject`` into EDM
 
@@ -135,7 +144,7 @@ class Designer:
         for widget in widgets:
             if isinstance(widget, Layout):
                 logger.debug('Rendering child layout ...')
-                edl.append(self.render_object(widget))
+                edl.append(self.render(widget))
 
             else:
                 logger.debug('Rendering widget {} ...'.format(widget.name))
@@ -152,7 +161,7 @@ class Designer:
         return '\n\n'.join(edl)
 
 
-    def show(self, wd=None, wait=True, **kwargs):
+    def exec_(self, wd=None, wait=True, **kwargs):
         """
         Show the current EDM screen
 
@@ -204,7 +213,7 @@ class Designer:
         objs = [self.screen]
         objs.extend(self.widgets)
 
-        edl  = [self.render_object(obj) for obj in objs]
+        edl  = [self.render(obj) for obj in objs]
         f.write('\n\n'.join(edl))
         f.flush()
 
