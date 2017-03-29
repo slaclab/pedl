@@ -20,7 +20,9 @@ from .errors  import DesignerError
 logger = logging.getLogger(__name__)
 
 class PedlMeta(type):
-
+    """
+    Metaclass for PedlObject
+    """
     def __new__(cls, name, bases, clsdict):
         #Create new PedlObject
         clsobj = super().__new__(cls, name, bases, clsdict)
@@ -53,7 +55,7 @@ class PedlObject(six.with_metaclass(PedlMeta, object)):
     """
     Basic PEDL Class
 
-    The generic class for any object that is rendered by pedl. This 
+    The generic class for any object that is rendered by pedl. 
     
     Parameters
     ----------
@@ -123,7 +125,7 @@ class PedlObject(six.with_metaclass(PedlMeta, object)):
         return self.x+ self.w
 
 
-    def place_bottom(self, y):
+    def placeBottom(self, y):
         """
         Place the bottom of the widget at a certain height
         """
@@ -131,7 +133,7 @@ class PedlObject(six.with_metaclass(PedlMeta, object)):
         return self.y
 
     
-    def place_right(self, x):
+    def placeRight(self, x):
         """
         Place the bottom of the widget at a certain height
         """
@@ -153,25 +155,24 @@ class PedlObject(six.with_metaclass(PedlMeta, object)):
 
 class Widget(PedlObject):
     """
-    The basic Widget that all others inherit from, defining positioning and
-    fill coloring settings
+    The basic Pedl Widget
 
-    Parameters
+    Every widget is a rectangular box that can be modifed and moved freely or
+    placed within a layout object. While the widget does not correspond to
+    directly to an EDM widget, it provides the base functionality to manipulate
+    the displayed object in space. Actual display information is left to
+    subclasses. 
+
+    Besides spatial attributes, the base Widget class also contains the colorPV
+    and visibility attributes. These are present because they are common to all
+    widgets in EDM,  :attr:`.visibility` controls the settings for the
+    visibility PV and associated display range, and :attr:`.colorPv` allows the
+    widget to display changes of state as specific alarm colors
+    
+    Attributes
     ----------
     name   : str , optional
         Alias of Widget
-
-    x : int, optional
-        Horizontal Position
-
-    y : int, optional
-        Vertical Position
-
-    w : int, optional
-        Width
-
-    h : int, optional
-        Height
     
     Attributes
     ----------
@@ -185,11 +186,34 @@ class Widget(PedlObject):
     template = 'widget.edl'
 
     colorPV = pedlproperty(str, doc="PV to control widget color")
+
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         #Visibility Info
         self.visibility = Visibility()
+
+
+    def setGeometry(self, x, y, w, h):
+        """
+        Set the geometry of the widget
+
+        Parameters
+        ----------
+        x : int
+            Left position of widget
+
+        y : int
+            Top position of widget
+
+        w : int
+            Width of widget
+
+        h : int
+            Height of widget
+        """
+        self.x, self.y, self.w, self.h = x, y, w, h
 
 
     @property
@@ -200,9 +224,19 @@ class Widget(PedlObject):
         return self.visibility.valid
 
 
-class Screen(PedlObject):
+class MainWindow(PedlObject):
     """
-    Control over EDM Screen Parameters
+    Basic EDM Screen
+
+    The EDM screen is represented as a PEDL object in order to control the size
+    and background color of the display. This is one area where PEDL diverges
+    from Qt, as EDM neccesitates a screen to display any widgets.
+
+    A default window is automatically instantiated inside the Designer as
+    :attr:`.window`. This can be tweaked to have the desired EDM output.
+    Finally, if you are using layouts, use :meth:`.setLayout` with resize set
+    to ``True``. This will abstract away the concern for resizing the screen,
+    and simply set the window size based on the provided layout.
 
     Attributes
     ----------
@@ -271,6 +305,7 @@ class Screen(PedlObject):
         #Move layout
         if origin:
             layout.x, layout.y = origin
+
         #If no origin, use top and center
         else:
             layout.y = self.margin
