@@ -99,7 +99,7 @@ class Layout(PedlObject):
         self.shuffle()
 
 
-    def addWidget(self, widget):
+    def add_widget(self, widget):
         """
         Add a Widget to the Layout
 
@@ -121,7 +121,7 @@ class Layout(PedlObject):
         self.shuffle()
 
 
-    def addWidgets(self, *args):
+    def add_widgets(self, *args):
         """
         Add a series of widgets to the layout
 
@@ -130,7 +130,7 @@ class Layout(PedlObject):
         *args : class:`.Widget`s
             Series of widgets to add
         """
-        list(map(lambda w : self.addWidget(w), args))
+        list(map(lambda w : self.add_widget(w), args))
 
 
     def addLayout(self, layout):
