@@ -4,7 +4,18 @@ values, PEDL will have a corresponding ``Choice`` object. These are  Python ``En
 types, that wrap the underlying EDM property options with conveinent, tab
 accessible attributes
 """
+####################
+# Standard Library #
+####################
 from enum import Enum
+
+####################
+#    Third Party   #
+####################
+
+####################
+#     Package      #
+####################
 
 class ColorChoice(Enum):
     """

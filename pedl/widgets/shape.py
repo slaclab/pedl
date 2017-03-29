@@ -3,6 +3,17 @@ EDM is capable of drawing a few basic shapes, :class:`.Rectangle` and
 :class:`.Circle`. Because both have identical options, just with a different
 drawing command, we have a shared :class:`.Shape` object that each inherits
 """
+####################
+# Standard Library #
+####################
+
+####################
+#    Third Party   #
+####################
+
+####################
+#     Package      #
+####################
 from ..widget  import Widget
 from ..choices import ColorChoice 
 from ..utils   import pedlproperty

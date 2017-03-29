@@ -1,9 +1,21 @@
+####################
+# Standard Library #
+####################
+import logging
+from copy import copy
+
+####################
+#    Third Party   #
+####################
+import six
+
+####################
+#     Package      #
+####################
 from .utils   import pedlproperty, Visibility
 from .choices import ColorChoice
 from .errors  import DesignerError
 
-from copy import copy
-import six
 class PedlMeta(type):
 
     def __new__(cls, name, bases, clsdict):
