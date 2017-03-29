@@ -15,6 +15,6 @@ inconsistentColor index {{widget.fill.value}}
 font {{widget.font.tag}}
 {% if widget.invisible %}invisible
 {% endif %}
-controlPv {{widget.control}}
+controlPv {{widget.controlPv}}
 {% block button %}{% endblock button%}
 {% endblock %}
