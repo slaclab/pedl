@@ -1,5 +1,5 @@
 from . import *
-from .widget         import Widget
+from .widget         import MainWindow, Widget
 from .widgets.shape  import Rectangle, Circle
 from .utils          import Font, Visibility, launch
 from .designer       import Designer
