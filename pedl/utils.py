@@ -305,7 +305,33 @@ class Font:
 
 
 class pedlproperty:
+    """
+    Reimplementation of Python property
 
+    This allows the flagging of certain properties as pertinent to PEDL
+    specifically, as well as the enforcement of types.
+
+    Parameters
+    ----------
+    _type : type
+        Desired type. The only caveat is bool variables should still be set as
+        ``int`` because EDM accepts binary instead of True / False keywords
+
+    default : value, optional
+        Default value to intialize the property with
+
+    fset : callable, optional
+        Function to overwrite default set method
+
+    fget : callable, optional
+        Function to overwrite default get method
+
+    cd : callable, optional
+        Function to be run after the fset changes the property value
+    
+    doc : str, optional
+        Short doc-string to describe the property
+    """
     def __init__(self, _type, default=None,
                  fset=None, fget=None,
                  cb=None, doc=None):
