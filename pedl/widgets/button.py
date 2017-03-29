@@ -17,7 +17,7 @@ import logging
 ##########
 from .shape    import Shape
 from ..utils   import Font, pedlproperty
-from ..layout  import StackLayout
+from ..layout  import StackedLayout
 from ..choices import ColorChoice, FontChoice
 
 logger = logging.getLogger(__name__)
@@ -71,7 +71,7 @@ class Button(Shape):
     @classmethod
     def buttonize(cls, obj, invisible=True, **kwargs):
         """
-        Create a :class:`.StackLayout` that turns an existing widget into a
+        Create a :class:`.StackedLayout` that turns an existing widget into a
         button
 
         Parameters
@@ -88,8 +88,8 @@ class Button(Shape):
 
         Returns
         -------
-        :class:`.StackLayout`
-            StackLayout with an button behind it of matching geometry
+        :class:`.StackedLayout`
+            StackedLayout with an button behind it of matching geometry
         """
         #Create Button
         button = cls(x=obj.x,y=obj.y, w=obj.w, h=obj.h, **kwargs)
@@ -97,7 +97,7 @@ class Button(Shape):
             button.invisible = True
 
         #Create Layout
-        l = StackLayout()
+        l = StackedLayout()
 
         #Add Widgets
         l.addWidget(button)
@@ -184,7 +184,7 @@ class MenuButton(Button):
     @classmethod
     def buttonize(cls, obj, blend=ColorChoice.Grey, **kwargs):
         """
-        Create a :class:`.StackLayout` that turns an existing widget into a
+        Create a :class:`.StackedLayout` that turns an existing widget into a
         button
 
         Parameters
@@ -202,8 +202,8 @@ class MenuButton(Button):
 
         Returns
         -------
-        :class:`.StackLayout`
-            StackLayout with a button behind it of matching geometry
+        :class:`.StackedLayout`
+            StackedLayout with a button behind it of matching geometry
         """
         #Create layout
         l = super().buttonize(obj, invisible=False, **kwargs)
