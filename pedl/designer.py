@@ -184,7 +184,10 @@ class Designer:
         """
         Draw the EDL screen
         """
-        objs = [self.screen, *self.widgets]
+        #Basic object list
+        objs = [self.screen]
+        objs.extend(self.widgets)
+
         edl  = [self.render_object(obj) for obj in objs]
         f.write('\n\n'.join(edl))
         f.flush()
