@@ -27,7 +27,7 @@ from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 ####################
 #     Package      #
 ####################
-from .widget  import PedlObject, Screen, Widget
+from .widget  import PedlObject, MainWindow, Widget
 from .errors  import WidgetError
 from .choices import FontChoice
 from .layout  import Layout
@@ -49,7 +49,7 @@ class Designer:
     widgets : list
         Ordered top-level list of widgets loaded into designer
 
-    screen : :class:`.Screen`
+    screen : :class:`.MainWindow`
         The final screen that will be created
 
     env : ``jinja2.Environment``
@@ -57,7 +57,7 @@ class Designer:
     """
     def __init__(self, template_dir=None):
 
-        self.screen  = Screen(parent=self)
+        self.window  = MainWindow(parent=self)
         self.widgets = list()
 
         #Load saved templates
@@ -210,7 +210,7 @@ class Designer:
         Draw the EDL screen
         """
         #Basic object list
-        objs = [self.screen]
+        objs = [self.window]
         objs.extend(self.widgets)
 
         edl  = [self.render(obj) for obj in objs]
