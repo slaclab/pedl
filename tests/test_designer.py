@@ -34,10 +34,10 @@ def test_set_layout():
     d = pedl.Designer()
     l = pedl.StackedLayout()
     l.addWidget(pedl.Widget(w=100, h=100))
-    d.screen.setLayout(l, resize=True)
+    d.window.setLayout(l, resize=True)
     assert d.widgets == [l]
-    assert d.screen.w == 110 
-    assert d.screen.h == 110 
+    assert d.window.w == 110 
+    assert d.window.h == 110 
 
 def test_recursive_widget_search():
     d  = pedl.Designer()
@@ -47,7 +47,7 @@ def test_recursive_widget_search():
     w3 = pedl.Widget()
     l.addWidget(w1)
     l.addWidget(w2)
-    d.screen.setLayout(l)
+    d.window.setLayout(l)
     d.addWidget(w3)
     assert d.widgets == [l,w3]
     assert d.findChildren() == [w1,w2,w3]
@@ -59,10 +59,10 @@ def test_recursive_widget_search():
 def test_screen_render():
     d = pedl.Designer()
     #Change Screen Attributes
-    d.screen.w, d.screen.h = 780, 1125
-    d.screen.name = 'Test'
+    d.window.w, d.window.h = 780, 1125
+    d.window.name = 'Test'
     #Render
-    assert d.render(d.screen) == conftest.window_edl
+    assert d.render(d.window) == conftest.window_edl
 
 def test_widget_render():
     d = pedl.Designer()
