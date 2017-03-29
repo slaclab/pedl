@@ -1,3 +1,16 @@
+"""
+The :class:`.Designer` is your main entrance point into the ``pedl`` toolkit.
+For those familiar with Qt, this is analagous to your ``QApplication``
+object. Behind the scenes, this is where the magic happens, each widget is
+simply a container for attributes that are then rendered into templates in the
+Designer. The method :meth:`.render_object` can be used to see this in action,
+but for the large part :meth:`.save` and :meth:`show` will do the heavy lifting
+for most applications.
+
+For more complicated sets of widgets it is easiest to manage them in sets of
+nested layouts. In the mode of operation, as opposed to adding widgets one by
+one, use :meth:`.setLayout` to apply your pattern to the screen.
+"""
 ####################
 # Standard Library #
 ####################
@@ -36,6 +49,9 @@ class Designer:
     widgets : list
         Ordered top-level list of widgets loaded into designer
 
+    screen : :class:`.Screen`
+        The final screen that will be created
+
     env : ``jinja2.Environment``
         Environment used to render templates
     """
@@ -58,7 +74,7 @@ class Designer:
                                trim_blocks=True, lstrip_blocks=True)
 
 
-    def addWidget(self, widget):
+    def add_widget(self, widget):
         """
         Add a free-floating widget
 
