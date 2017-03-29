@@ -28,7 +28,7 @@ import logging
 ####################
 from .widget  import Widget, PedlObject
 from .choices import AlignmentChoice
-from .utils import pedlproperty
+from .utils   import pedlproperty
 
 logger = logging.getLogger(__name__)
 
@@ -90,16 +90,22 @@ class Layout(PedlObject):
 
     @alignment.callback
     def alignment(self):
-        print('here')
         self.shuffle()
     
     @spacing.callback
     def spacing(self):
-        print('running')
         self.shuffle()
 
 
-    def add_widget(self, widget):
+    @property
+    def count(self):
+        """
+        Number of items in layout
+        """
+        return len(self.widgets)
+
+
+    def addWidget(self, widget):
         """
         Add a Widget to the Layout
 
@@ -108,6 +114,13 @@ class Layout(PedlObject):
         widget : :class:`.Widget`
             EDM Widget
         """
+        self.insertWidget(self.count, widget)
+
+
+    def insertWidget(self, index, widget):
+        """
+        Insert a widget into the layout
+        """
         if not isinstance(widget, Widget):
             raise TypeError('Must be an EDM Widget')
 
@@ -115,23 +128,11 @@ class Layout(PedlObject):
         widget.parent = self
 
         #Add to widget
-        self.widgets.append(widget)
+        self.widgets.insert(index, widget)
 
         #Redraw
         self.shuffle()
-
-
-    def add_widgets(self, *args):
-        """
-        Add a series of widgets to the layout
-
-        Parameters
-        ----------
-        *args : class:`.Widget`s
-            Series of widgets to add
-        """
-        list(map(lambda w : self.add_widget(w), args))
-
+       
 
     def addLayout(self, layout):
         """
@@ -142,6 +143,12 @@ class Layout(PedlObject):
         layout : :class:`.Layout`
             Nested layout to add
         """
+        self.insertLayout(self.count, layout)
+
+    
+    def insertLayout(self, index, layout):
+        """
+        """
         if not isinstance(layout, Layout):
             raise TypeError('Must be an EDM Layout')
 
@@ -149,7 +156,7 @@ class Layout(PedlObject):
         layout.parent = self
 
         #Add to Widget
-        self.widgets.append(layout)
+        self.widgets.insert(index, layout)
 
         #Redraw
         self.shuffle()
@@ -189,7 +196,7 @@ class HBoxLayout(Layout):
                 widget.y = self.y
 
             elif self.alignment == AlignmentChoice.Bottom:
-                widget.place_bottom(self.widgets[0].bottom)
+                widget.placeBottom(self.widgets[0].bottom)
 
             elif self.alignment == AlignmentChoice.Center:
                 widget.recenter(y=self.widgets[0].center[1])
@@ -223,7 +230,7 @@ class VBoxLayout(Layout):
                 widget.x = self.x
 
             elif self.alignment == AlignmentChoice.Right:
-                widget.place_right(self.widgets[0].right)
+                widget.placeRight(self.widgets[0].right)
 
             elif self.alignment == AlignmentChoice.Center:
                 widget.recenter(x=self.widgets[0].center[0])
@@ -234,7 +241,7 @@ class VBoxLayout(Layout):
         #Rearrange parent layout
         super().shuffle()
 
-class StackLayout(Layout):
+class StackedLayout(Layout):
     """
     Layout for widgets placed on top of each other
 
@@ -295,7 +302,7 @@ class StackLayout(Layout):
                 w.x = ld.x
 
             elif AlignmentChoice.Right in self.alignment:
-                w.place_right(x=ld.right)
+                w.placeRight(x=ld.right)
 
             else:
                 w.recenter(x=ld.center[0])
@@ -305,7 +312,7 @@ class StackLayout(Layout):
                 w.y = ld.y
 
             elif AlignmentChoice.Bottom in self.alignment:
-                w.place_bottom(y=ld.bottom)
+                w.placeBottom(y=ld.bottom)
 
             else:
                 w.recenter(y=ld.center[1])
