@@ -39,12 +39,12 @@ def test_valid():
 def test_template():
     d = pedl.Designer()
     w = pedl.Widget()
-    assert 'vis' not in d.render_object(w)
+    assert 'vis' not in d.render(w)
     w.visibility.pv = 'TST:PV'
     w.visibility.min, w.visibility.max = 1,2
-    assert 'visPv TST:PV' in d.render_object(w)
-    assert 'visMax 2' in d.render_object(w)
-    assert 'visMin 1' in d.render_object(w)
+    assert 'visPv TST:PV' in d.render(w)
+    assert 'visMax 2' in d.render(w)
+    assert 'visMin 1' in d.render(w)
     w.visibility.inverted = True
-    assert 'visInverted' in d.render_object(w)
+    assert 'visInverted' in d.render(w)
 

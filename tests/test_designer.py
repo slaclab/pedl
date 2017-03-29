@@ -21,19 +21,19 @@ def test_designer_init():
     assert os.path.exists(d.env.loader.searchpath[0])
 
 
-def test_add_widget():
+def test_addWidget():
     d = pedl.Designer()
     w = pedl.Widget()
-    d.add_widget(w)
+    d.addWidget(w)
     assert d.widgets == [w]
 
     with pytest.raises(TypeError):
-        d.add_widget(4)
+        d.addWidget(4)
 
 def test_set_layout():
     d = pedl.Designer()
-    l = pedl.StackLayout()
-    l.add_widget(pedl.Widget(w=100, h=100))
+    l = pedl.StackedLayout()
+    l.addWidget(pedl.Widget(w=100, h=100))
     d.screen.setLayout(l, resize=True)
     assert d.widgets == [l]
     assert d.screen.w == 110 
@@ -41,16 +41,19 @@ def test_set_layout():
 
 def test_recursive_widget_search():
     d  = pedl.Designer()
-    l  = pedl.StackLayout()
+    l  = pedl.StackedLayout()
     w1 = pedl.Widget()
-    w2 = pedl.Widget()
+    w2 = pedl.Rectangle(name='RECT')
     w3 = pedl.Widget()
-    l.add_widget(w1)
-    l.add_widget(w2)
+    l.addWidget(w1)
+    l.addWidget(w2)
     d.screen.setLayout(l)
-    d.add_widget(w3)
+    d.addWidget(w3)
     assert d.widgets == [l,w3]
-    assert d.all_widgets == [w1,w2,w3]
+    assert d.findChildren() == [w1,w2,w3]
+    assert d.findChildren(name='RECT') == [w2]
+    assert d.findChildren(_type=pedl.Rectangle) == [w2]
+
 
 
 def test_screen_render():
@@ -59,12 +62,12 @@ def test_screen_render():
     d.screen.w, d.screen.h = 780, 1125
     d.screen.name = 'Test'
     #Render
-    assert d.render_object(d.screen) == conftest.window_edl
+    assert d.render(d.screen) == conftest.window_edl
 
 def test_widget_render():
     d = pedl.Designer()
     w = pedl.Widget(name='Rectangle')
-    assert d.render_object(w) == conftest.widget_edl
+    assert d.render(w) == conftest.widget_edl
 
 @requires_edm
 def test_launch():
@@ -82,9 +85,9 @@ def test_launch():
     assert proc.poll() == -15
 
 @requires_edm
-def test_show():
+def test_exec():
     d    = pedl.Designer()
-    proc = d.show(wait=False)
+    proc = d.exec_(wait=False)
     assert not proc.poll()
     proc.terminate()
 

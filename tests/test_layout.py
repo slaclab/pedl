@@ -6,10 +6,10 @@ def test_add_objects():
     c_l = pedl.layout.Layout()
     p   = pedl.Widget()
     #Test Widget
-    l.add_widget(p)
+    l.addWidget(p)
     assert l.widgets == [p]
     with pytest.raises(TypeError):
-        l.add_widget(4)
+        l.addWidget(4)
 
     #Test Layout
     l.addLayout(c_l)
@@ -31,9 +31,9 @@ def test_alignment():
 
 def test_horizontal_layout():
     l = pedl.HBoxLayout()
-    l.add_widget(pedl.Widget(w=50,  h=100))
-    l.add_widget(pedl.Widget(w=100, h=50))
-    l.add_widget(pedl.Widget(w=100, h=100))
+    l.addWidget(pedl.Widget(w=50,  h=100))
+    l.addWidget(pedl.Widget(w=100, h=50))
+    l.addWidget(pedl.Widget(w=100, h=100))
 
     #Default locations
     assert l.widgets[0].x == 0
@@ -89,9 +89,9 @@ def test_horizontal_layout():
 
 def test_vertical_layout():
     l = pedl.VBoxLayout()
-    l.add_widget(pedl.Widget(w=50,  h=100))
-    l.add_widget(pedl.Widget(w=100, h=50))
-    l.add_widget(pedl.Widget(w=100, h=100))
+    l.addWidget(pedl.Widget(w=50,  h=100))
+    l.addWidget(pedl.Widget(w=100, h=50))
+    l.addWidget(pedl.Widget(w=100, h=100))
 
     #Default locations
     assert l.widgets[0].x == 0
@@ -146,10 +146,10 @@ def test_vertical_layout():
     assert l.h            == 270
 
 def test_stack_layout():
-    l = pedl.StackLayout()
-    l.add_widget(pedl.Widget(w=50,  h=100))
-    l.add_widget(pedl.Widget(w=100, h=50))
-    l.add_widget(pedl.Widget(w=100, h=100))
+    l = pedl.StackedLayout()
+    l.addWidget(pedl.Widget(w=50,  h=100))
+    l.addWidget(pedl.Widget(w=100, h=50))
+    l.addWidget(pedl.Widget(w=100, h=100))
 
     #Default locations
     assert l.widgets[0].x == 0
@@ -240,8 +240,8 @@ def test_compound_layout():
     v1 = pedl.VBoxLayout()
     v2 = pedl.VBoxLayout()
     for l in (v1,v2):
-        l.add_widget(pedl.Widget(w=100,h=200))
-        l.add_widget(pedl.Widget(w=200,h=100))
+        l.addWidget(pedl.Widget(w=100,h=200))
+        l.addWidget(pedl.Widget(w=200,h=100))
         h.addLayout(l)
 
     #Check layout positioning

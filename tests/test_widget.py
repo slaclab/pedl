@@ -38,9 +38,9 @@ def test_framing(pedl_obj):
     assert pedl_obj.center == (88, 100)
 
 def test_placements(pedl_obj):
-    pedl_obj.place_bottom(200)
+    pedl_obj.placeBottom(200)
     assert pedl_obj.y == 100
-    pedl_obj.place_right(150)
+    pedl_obj.placeRight(150)
     assert pedl_obj.x == 50
     pedl_obj.recenter(x=50, y=50)
     assert pedl_obj.x == 0
