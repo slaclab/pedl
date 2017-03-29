@@ -1,4 +1,4 @@
-from .               import choices
+from . import *
 from .widget         import Widget
 from .widgets.shape  import Rectangle, Circle
 from .utils          import Font, Visibility, launch
