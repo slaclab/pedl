@@ -1,5 +1,5 @@
-Button Widgets
---------------
+Buttons
+-------
 
 .. automodule:: pedl.widgets.button
 

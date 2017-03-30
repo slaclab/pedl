@@ -10,8 +10,8 @@ Base Widget
    :inherited-members:
 
 
-Shape Types
------------
+Shapes
+------
 .. automodule:: pedl.widgets.shape
 
 .. autoclass:: pedl.widgets.Shape
