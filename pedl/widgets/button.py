@@ -26,21 +26,25 @@ logger = logging.getLogger(__name__)
 class Button(Shape):
 
     #PEDL properties
+    controlPv = pedlproperty(str, doc='Name of the Pv to control')
     fontColor = pedlproperty(int, default=ColorChoice.Black,
                              doc='Color of the font inside the button')
+    font      = pedlproperty(Font.is_font, default = Font(),
+                             doc= 'Font as indicated by :class:`.Font`')
     invisible = pedlproperty(int, default=False,
                              doc='The visibility of the button, if set to '
                                  'True, the button will still be clickable, '
                                  'but will not be seen by the user until '
                                  'moused over')
-    fill      = pedlproperty(ColorChoice, default=ColorChoice.Grey,
-                             doc= 'Fill color of the Widget')
-    lineColor = pedlproperty(ColorChoice,
-                             doc= 'Color of the border surrounding the button')
+    
+    
+    #Change defaults
+    fill = copy.copy(Shape.fill)
+    fill.default = ColorChoice.Grey
 
-    controlPv = pedlproperty(str, doc='Name of the Pv to control')
-    #Font Choice
-    _font = Font(font=FontChoice.Helvetica, size=18)
+    lineColor = copy.copy(Shape.lineColor)
+    lineColor.default = None
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
@@ -48,21 +52,7 @@ class Button(Shape):
         #Make border disappear if set to None
         if not self.lineColor:
             self.lineColor = self.fill
-
-    @property
-    def font(self):
-        """
-        Button Font as indicated by :class:`.Font`
-        """
-        return self._font
-
-    @font.setter
-    def font(self, font):
-        if not isinstance(font, Font):
-            raise TypeError("Must be a Font object")
-
-        self._font = font
-
+    
     @property
     def lineWidth(self):
         raise NotImplementedError("Button frame can only be modifed "
