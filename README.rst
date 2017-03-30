@@ -4,7 +4,7 @@ PEDL
     :target: https://travis-ci.org/slaclab/pedl
 
 .. image:: https://codecov.io/github/slaclab/pedl/coverage.svg?branch=master
-    :target: https://codecov.io/slaclab/pedl?branch=master
+    :target: https://codecov.io/gh/slaclab/pedl?branch=master
 
 Python Module for Creating EDM files
 
