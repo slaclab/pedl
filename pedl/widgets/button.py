@@ -17,7 +17,7 @@ import logging
 ##########
 from .shape    import Shape
 from ..utils   import Font, pedlproperty
-from ..layout  import StackedLayout
+from ..layout  import Layout, StackedLayout
 from ..choices import ColorChoice, FontChoice
 
 logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ class Button(Shape):
 
     #PEDL properties
     controlPv = pedlproperty(str, doc='Name of the Pv to control')
-    fontColor = pedlproperty(int, default=ColorChoice.Black,
+    fontColor = pedlproperty(ColorChoice, default=ColorChoice.Black,
                              doc='Color of the font inside the button')
     font      = pedlproperty(Font.is_font, default = Font(),
                              doc= 'Font as indicated by :class:`.Font`')
@@ -74,7 +74,7 @@ class Button(Shape):
 
         kwargs : 
             Define additional button specific keyword arguments. These can not
-            include any parameter involving the geometry
+            include any parameter involving the geometry or visibility
 
         Returns
         -------
@@ -106,17 +106,6 @@ class MessageButton(Button):
     The simplest Pv interaction widget, MessageButton sends a single Pv a
     single value when pressed. The Widget will need a value and controlPv to
     function properly within EDM
-
-    Parameters
-    ----------
-    value : str, int, float
-        Desired value associated with a press of the button
-
-    control : str
-        Pv to send ``value``
-
-    label : str
-        Optional Label to place on the button when visible
     """
     #Templating information
     widgetClass = 'activeMessageButtonClass' 
@@ -125,8 +114,8 @@ class MessageButton(Button):
     template    = 'message.edl'
 
     #Defaults
-    label = pedlproperty(str, default='', doc='Label of Button')
-    value = pedlproperty(str, default='', doc='Value to apply to controlPv')
+    label = pedlproperty(str,  default='', doc='Label of Button')
+    value = pedlproperty(None, default='', doc='Value to apply to controlPv')
 
 
 class MenuButton(Button):
