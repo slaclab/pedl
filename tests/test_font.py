@@ -35,3 +35,19 @@ def test_tag(font):
     font.font = 'utopia'
     font.bold, font.italicized = True, True
     assert font.tag == 'utopia-bold-i-8.0'
+
+
+def test_is_font(font):
+    f = pedl.Font.is_font(font)
+    assert f.size == font.size
+
+    f = pedl.Font.is_font({'size':12})
+    assert f.size == 12
+
+    f = pedl.Font.is_font((12,False, True))
+    assert f.size == 12
+    assert f.italicized == False
+    assert f.bold == True
+
+    with pytest.raises(ValueError):
+        f = pedl.Font.is_font(12)
