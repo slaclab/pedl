@@ -4,10 +4,10 @@ Python Module for Creating EDM files
 
 Using Jinja2 templating, PEDL wraps EDM functionality into a Qt inspired API
 for an intuitive module for creating screens. This abstracts much of the manual
-manipulation of widgets into arbitrary combinations of layouts::
+manipulation of widgets into arbitrary combinations of layouts
 
 Usage
-==========
+=====
 The main workhorse of the module is the Designer, analagous to QApplication.
 The main difference is that each Designer has the main window rolled into the
 object::
