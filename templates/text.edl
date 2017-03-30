@@ -1,11 +1,13 @@
 {% extends 'widget.edl' %}
 {% block properties %}
-font {{widget.font.tag}}
+font "{{widget.font.tag}}"
+fontAlign "{{widget.alignment.value}}"
 fgColor index {{widget.fontColor.value}}
-{% if widget.fill %}
-bgColor index {{widget.fill.value}}
-{% else %}
+{% if not widget.fill %}
+bgColor index 0
 useDisplayBg
+{% else %}
+bgColor index {{widget.fill.value}}
 {% endif %}
 value {
   "{{widget.text}}"
