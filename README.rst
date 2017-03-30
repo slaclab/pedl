@@ -1,5 +1,11 @@
 PEDL
 =====
+.. image:: https://travis-ci.org/slaclab/pedl.svg?branch=master
+    :target: https://travis-ci.org/slaclab/pedl
+
+.. image:: https://codecov.io/github/slaclab/pedl/coverage.svg?branch=master
+    :target: https://codecov.io/slaclab/pedl?branch=master
+
 Python Module for Creating EDM files
 
 Using Jinja2 templating, PEDL wraps EDM functionality into a Qt inspired API
