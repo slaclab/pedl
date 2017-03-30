@@ -26,6 +26,30 @@ def test_menu():
     d = pedl.Designer()
     assert d.render(w) == menu_edl
 
+
+def test_message_buttonize():
+    w = pedl.Widget(w=50,h=75)
+    l = pedl.widgets.MessageButton.buttonize(w, controlPv='PV:FAKE',value=10)
+    assert isinstance(l, pedl.StackedLayout)
+    assert l.widgets[0].controlPv == 'PV:FAKE'
+    assert l.widgets[0].value == 10
+    assert l.widgets[0].w == 50
+    assert l.widgets[0].h == 75
+    assert l.widgets[1].w == 50
+    assert l.widgets[1].h == 75
+
+def test_menu_buttonize():
+    w = pedl.Widget(w=50,h=75)
+    l = pedl.widgets.MenuButton.buttonize(w, controlPv='PV:FAKE')
+    assert isinstance(l, pedl.StackedLayout)
+    assert l.widgets[0].controlPv == 'PV:FAKE'
+    assert l.widgets[0].w == 50
+    assert l.widgets[0].h == 75
+    assert l.widgets[1].w == 50
+    assert l.widgets[1].h == 75
+
+
+
 message_edl= """\
 # (activeMessageButtonClass)
 object activeMessageButtonClass
