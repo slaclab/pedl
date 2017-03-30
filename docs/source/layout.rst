@@ -16,4 +16,4 @@ Layout Types
 
 .. autoclass:: pedl.HBoxLayout
 
-.. autoclass:: pedl.StackLayout
+.. autoclass:: pedl.StackedLayout
