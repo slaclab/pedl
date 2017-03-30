@@ -294,14 +294,56 @@ class Font:
 
         return '-'.join([self.font.value, bold, italic, size])
 
+    @classmethod
+    def is_font(cls, font):
+        """
+        Create a font from a given set of information
+
+        If the provided argument is already a Font, it is simply returned,
+        otherwise dicts and iterables are attempted to be converted into a
+        Font. If ``None`` is provided, a Font is returned with only default
+        settings
+
+        Parameters
+        ----------
+        font : :class:`.Font`, NoneType, dict, or iterable
+            Font specification to convert
+
+
+        Returns
+        -------
+        font : :class:`.Font`
+            Converted Font
+
+        Raises
+        ------
+        ValueError:
+            If the given specification can not be converted
+        """
+        if isinstance(font, cls):
+            return font
+
+        elif font == None:
+            return Font()
+
+        try:
+            if isinstance(font, dict):
+                font = cls(**font)
+
+            else:
+                font = cls(*font)
+
+        except TypeError:
+            raise ValueError("Invalid font '{}'".format(font))
+
+        return font
 
     def __repr__(self):
         return 'Font {} (Size : {}pt, Italic : {},'\
-                'Bold {}, Color :{})'.format(self.font,
-                                             self.size,
-                                             self.italicized,
-                                             self.bold,
-                                            )
+                'Bold {})'.format(self.font,
+                                  self.size,
+                                  self.italicized,
+                                  self.bold)
 
 
 class pedlproperty:
