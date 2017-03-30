@@ -1,5 +1,7 @@
 Advanced Options
 ----------------
+More complex options in EDM can not be represented as simple Python attributes,
+in these cases, we provide more advanced specification.
 
 Fonts
 ++++++
