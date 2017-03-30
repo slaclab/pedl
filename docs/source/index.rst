@@ -9,16 +9,10 @@
 
 .. toctree::
    :maxdepth: 1
-   :caption: Widget Types
+   :caption: Widgets
 
-   shape.rst
-   button.rst
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Basic Widget Options
-   
    widget.rst
-   font.rst
-   choices.rst
+   button.rst
+   options.rst
+
 
