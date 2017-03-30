@@ -180,40 +180,31 @@ class Designer:
         -------
         proc : ``subprocess.Popen``
             Process containing EDM launch
-
-        See Also
-        --------
-        :meth:`.Designer.launch`
         """
         with tempfile.NamedTemporaryFile(mode='w+', suffix='.edl') as temp:
-            self._create(temp.file)
+            self.dump(temp)
             return launch(temp.name, wd=wd, wait=wait ,**kwargs)
 
 
-    def save(self, path):
+    def dump(self, handle):
         """
-        Save the screen to an edl file
+        Save the screen to a file handle
 
         Parameters
         ----------
-        path : str
-            Desired filename and path
+        handle : file-like object
+            File to store rendered created PEDL objects
         """
-        if not path.endswith('.edl'):
-            path += '.edl'
+        if not handle.name.endswith('.edl'):
+            logger.warning('Filename does not have suffix .edl ',
+                           'EDM will not be able to launch this file')
 
-        with open(path, 'w+') as f:
-            self._create(f)
-
-    def _create(self,f):
-        """
-        Draw the EDL screen
-        """
         #Basic object list
         objs = [self.window]
         objs.extend(self.widgets)
 
         edl  = [self.render(obj) for obj in objs]
-        f.write('\n\n'.join(edl))
-        f.flush()
+
+        handle.write('\n\n'.join(edl))
+        handle.flush()
 
