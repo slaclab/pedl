@@ -409,7 +409,7 @@ class pedlproperty:
 
         #Enforce value
         else:
-            if value is not None:
+            if value is not None and self.type is not None:
                 value = self.type(value)
 
             #Store previous value for comparison
