@@ -8,6 +8,10 @@ bgColor index {{widget.fill.value}}
 useDisplayBg
 {% endif %}
 value {
-  "{{text}}"
+  "{{widget.text}}"
 }
+{% if widget.lineWidth %}
+border
+lineWidth {{widget.lineWidth}}
+{% endif %}
 {% endblock %}
