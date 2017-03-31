@@ -279,7 +279,6 @@ class StackedLayout(Layout):
         except TypeError:
             align = [AlignmentChoice(align)]
 
-        print(align)
         if align != self.attributes.get('alignment'):
             self.attributes['alignment'] = align
             self.shuffle()
