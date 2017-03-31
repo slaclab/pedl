@@ -17,10 +17,8 @@ def test_designer_init():
     with pytest.raises(FileNotFoundError):
         d = pedl.Designer(template_dir='NOT/A/DIR')
 
-    d = pedl.Designer()
-    assert os.path.exists(d.env.loader.searchpath[0])
-
-
+    d  = pedl.Designer() 
+    assert len(d.env.list_templates()) > 0
 def test_addWidget():
     d = pedl.Designer()
     w = pedl.Widget()
