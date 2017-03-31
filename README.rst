@@ -41,7 +41,7 @@ positioning of each widget in relationship to both the screen and other widgets:
     for light in (go, slow, stop):
         stop_light.addWidget(light)
 
-    app.window.setLayout(stop_light)
+    app.window.setLayout(stop_light, resize=True)
 
 
 The output can either be saved to a file, or directly viewed from the
