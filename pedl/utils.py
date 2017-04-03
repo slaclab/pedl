@@ -6,6 +6,7 @@ PEDL Utilities
 ############
 import os
 import math
+import copy
 import logging
 import subprocess
 from enum import Enum
@@ -105,7 +106,9 @@ class Visibility:
 
     Before drawing, the :class:`.pedl.Designer` will check the :attr:`.valid`
     flag to make sure that information has been properly entered, and the range
-    makes logical sense.
+    makes logical sense. By default, the max is set to :attr:`.default_max`,
+    as the EDM interpreter effectively will not show a PV who has only a
+    minimum Visibility range set.
 
     Parameters
     ----------
@@ -128,11 +131,16 @@ class Visibility:
 
     max : int, float
         Maximum value to display Widget (exclusive)
+
+    default_max : int
+        Default maximum value if not max is specified
     """
+    default_max = 1000
+
     def __init__(self, pv=None, min=None, max=None, inverted=False):
         self.pv  = pv
         self.min = min
-        self.max = max
+        self.max = max or self.default_max
         self._inverted = inverted
 
 
@@ -154,7 +162,7 @@ class Visibility:
         """
         Whether any Visibility information has been entered
         """
-        return any([self.pv, self.min, self.max])
+        return any([self.pv, self.min, self.max!=self.default_max])
 
 
     @property
@@ -165,15 +173,61 @@ class Visibility:
         if not self.pv:
             return False
 
-        if self.min is not None and self.max is not None:
+        if self.min is not None:
             return self.min < self.max
 
-        elif self.min is not None or self.max is not None:
-            return True
+        return True
 
-        else:
-            return False
 
+    @classmethod
+    def is_visibility(cls, vis):
+        """
+        Create a representation of Visibility settings from a given set of
+        information
+
+        If the provided argument is already Visibility object, it is simply
+        returned, otherwise dicts and iterables are attempted to be converted
+        into a Visibility. If ``None`` is provided, Visbility is returned with only
+        default settings
+
+        Parameters
+        ----------
+        vis : :class:`.Visibility`, NoneType, dict, or iterable
+            Visibilility specification to convert
+
+
+        Returns
+        -------
+        font : :class:`.Font`
+            Converted Font
+
+        Raises
+        ------
+        ValueError:
+            If the given specification can not be converted
+        """
+        if isinstance(vis, cls):
+            return copy.copy(vis)
+
+        elif vis == None:
+            return Visibility()
+
+        try:
+            if isinstance(vis, dict):
+                vis = cls(**vis)
+
+            else:
+                vis = cls(*vis)
+
+        except TypeError:
+            raise ValueError("Invalid visibility '{}'".format(vis))
+
+        return vis
+
+
+    def __copy__(self):
+        return Visibility(pv=self.pv, min=self.min,
+                          max=self.max, inverted=self.inverted)
 
 class Font:
     """
@@ -321,7 +375,7 @@ class Font:
             If the given specification can not be converted
         """
         if isinstance(font, cls):
-            return font
+            return copy.copy(font)
 
         elif font == None:
             return Font()
@@ -344,6 +398,10 @@ class Font:
                                   self.size,
                                   self.italicized,
                                   self.bold)
+
+    def __copy__(self):
+        return Font(size=self.size, italicized=self.italicized,
+                    bold=self.bold, font=self.font)
 
 
 class pedlproperty:
