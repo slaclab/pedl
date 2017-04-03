@@ -27,6 +27,9 @@ class Shape(Widget):
     fill      = pedlproperty(ColorChoice, doc='Background fill in the widget')
     lineColor = pedlproperty(ColorChoice, default=ColorChoice.Black,
                              doc='Color of surrounding Widget frame')
+    alarm  = pedlproperty(bool, default=False,
+                          doc='Fill color will be sensitive to the '
+                              'alarm state of the PV')
 
 class Circle(Shape):
     widgetClass = 'activeCircleClass'
