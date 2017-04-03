@@ -9,6 +9,6 @@ setup(name    = 'pedl',
       author  = 'SLAC National Accelerator Laboratory',
 
       packages    = find_packages(),
-      description = 'Qt Inspired Wrapper for creation of EDM files'
-
+      description = 'Qt Inspired Wrapper for creation of EDM files',
+      include_package_data = True,
     )
