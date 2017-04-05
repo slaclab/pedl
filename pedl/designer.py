@@ -22,7 +22,8 @@ import tempfile
 ####################
 #    Third Party   #
 ####################
-from jinja2 import Environment, FileSystemLoader, TemplateNotFound
+from jinja2 import Environment, FileSystemLoader
+from jinja2 import PackageLoader, TemplateNotFound
 
 ####################
 #     Package      #
@@ -60,18 +61,21 @@ class Designer:
         self.window  = MainWindow(parent=self)
         self.widgets = list()
 
-        #Load saved templates
-        if not template_dir:
-            template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                        '../templates')
+        #Load specified template directory
+        if template_dir:
+            if not os.path.exists(template_dir):
+                raise FileNotFoundError('No such directory {}'
+                                        ''.format(template_dir))
 
-        if not os.path.exists(template_dir):
-            raise FileNotFoundError('No such directory {}'.format(template_dir))
+            logger.debug('Using {} as template directory ...'
+                         ''.format(template_dir))
+            loader = FileSystemLoader(template_dir)
 
-        logger.debug('Using {} as template directory ...'.format(template_dir))
+        else:
+            loader = PackageLoader('pedl')
 
-        self.env = Environment(loader=FileSystemLoader(template_dir),
-                               trim_blocks=True, lstrip_blocks=True)
+
+        self.env = Environment(loader=loader,trim_blocks=True,lstrip_blocks=True)
 
 
     def addWidget(self, widget):

@@ -17,10 +17,8 @@ def test_designer_init():
     with pytest.raises(FileNotFoundError):
         d = pedl.Designer(template_dir='NOT/A/DIR')
 
-    d = pedl.Designer()
-    assert os.path.exists(d.env.loader.searchpath[0])
-
-
+    d  = pedl.Designer() 
+    assert len(d.env.list_templates()) > 0
 def test_addWidget():
     d = pedl.Designer()
     w = pedl.Widget()
@@ -43,7 +41,7 @@ def test_recursive_widget_search():
     d  = pedl.Designer()
     l  = pedl.StackedLayout()
     w1 = pedl.Widget()
-    w2 = pedl.Rectangle(name='RECT')
+    w2 = pedl.widgets.Rectangle(name='RECT')
     w3 = pedl.Widget()
     l.addWidget(w1)
     l.addWidget(w2)
@@ -52,7 +50,7 @@ def test_recursive_widget_search():
     assert d.widgets == [l,w3]
     assert d.findChildren() == [w1,w2,w3]
     assert d.findChildren(name='RECT') == [w2]
-    assert d.findChildren(_type=pedl.Rectangle) == [w2]
+    assert d.findChildren(_type=pedl.widgets.Rectangle) == [w2]
 
 
 

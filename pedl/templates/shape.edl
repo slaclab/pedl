@@ -2,6 +2,9 @@
 {% block properties %}
 {% if widget.fill %}fill
 fillColor index {{widget.fill.value}}
+{% if widget.alarm %}
+fillAlarm
+{% endif %}
 {% endif %}
 lineWidth {{widget.lineWidth}}
 lineColor index {{widget.lineColor.value}}

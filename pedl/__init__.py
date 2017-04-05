@@ -1,6 +1,6 @@
 from . import *
+from . import widgets
 from .widget         import MainWindow, Widget
-from .widgets.shape  import Rectangle, Circle
 from .utils          import Font, Visibility, launch
 from .designer       import Designer
 from .layout         import VBoxLayout, HBoxLayout, StackedLayout

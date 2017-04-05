@@ -80,7 +80,7 @@ class PedlObject(six.with_metaclass(PedlMeta, object)):
         self.parent     = parent
 
         #Store default value within the class
-        self.attributes = dict((prop.attr, prop.default) for prop in
+        self.attributes = dict((prop.attr, copy(prop.default)) for prop in
                                 self._pedl.values())
 
         #Update kwargs 
@@ -152,6 +152,9 @@ class PedlObject(six.with_metaclass(PedlMeta, object)):
 
         return self.x, self.y
 
+    def __copy__(self):
+        return self.__class__(**self.attributes)
+
 
 class Widget(PedlObject):
     """
@@ -166,34 +169,23 @@ class Widget(PedlObject):
     Besides spatial attributes, the base Widget class also contains the colorPV
     and visibility attributes. These are present because they are common to all
     widgets in EDM,  :attr:`.visibility` controls the settings for the
-    visibility PV and associated display range, and :attr:`.colorPv` allows the
+    visibility PV and associated display range, and :attr:`.alarmPv` allows the
     widget to display changes of state as specific alarm colors
-    
+
     Attributes
     ----------
     name   : str , optional
         Alias of Widget
-    
-    Attributes
-    ----------
-    visibility : :class:`.Visibility`
-        Visibility Settings for Widget
     """
-
     #Default Widget Info
     minor    = 1
     release  = 1
     template = 'widget.edl'
 
-    colorPV = pedlproperty(str, doc="PV to control widget color")
-
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        #Visibility Info
-        self.visibility = Visibility()
-
+    alarmPV     = pedlproperty(str, doc="PV to monitor alarm state")
+    visibility  = pedlproperty(Visibility.is_visibility,
+                               default=Visibility(),
+                               doc='Visibility Settings for Widget')
 
     def setGeometry(self, x, y, w, h):
         """

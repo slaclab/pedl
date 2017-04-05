@@ -19,11 +19,8 @@ def test_valid():
     vis = pedl.Visibility()
     #Test no information
     assert not vis.valid
-
-    #Test no range information
     vis.pv = 'TST:PV'
-    assert not vis.valid
-
+    
     #Test valid
     vis.min, vis.max = 0,4
     assert vis.valid
@@ -31,10 +28,6 @@ def test_valid():
     #Test conflicting range
     vis.max = -1
     assert not vis.valid
-
-    #Test open ended range
-    vis.max = None
-    assert vis.valid
 
 def test_template():
     d = pedl.Designer()
@@ -46,5 +39,21 @@ def test_template():
     assert 'visMax 2' in d.render(w)
     assert 'visMin 1' in d.render(w)
     w.visibility.inverted = True
-    assert 'visInverted' in d.render(w)
+    assert 'visInvert' in d.render(w)
+
+
+def test_is_visibility():
+    v = pedl.Visibility.is_visibility(pedl.Visibility(pv='TST:PV'))
+    v.pv == 'TST:PV'
+    
+    v = pedl.Visibility.is_visibility({'pv':'TST:PV', 'min':2})
+    assert v.pv ==  'TST:PV'
+    assert v.min ==  2
+
+    v = pedl.Visibility.is_visibility(['TST:PV', 2])
+    assert v.pv ==  'TST:PV'
+    assert v.min ==  2
+
+    with pytest.raises(ValueError):
+        v = pedl.Visibility.is_visibility(12)
 
