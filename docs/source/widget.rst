@@ -19,10 +19,10 @@ Shapes
    :show-inheritance:
 
 
-.. autoclass:: pedl.Rectangle
+.. autoclass:: pedl.widgets.Rectangle
    :show-inheritance:
 
-.. autoclass:: pedl.Circle
+.. autoclass:: pedl.widgets.Circle
    :show-inheritance:
 
 Static Text
