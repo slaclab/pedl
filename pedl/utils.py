@@ -5,6 +5,7 @@ PEDL Utilities
 # Standard #
 ############
 import os
+import re
 import math
 import copy
 import logging
@@ -493,3 +494,39 @@ class pedlproperty:
         return type(self)(self.type, default=self.default,
                           fget=self.fget, fset=self.fset,
                           cb=cb, doc=self.__doc__)
+
+
+def find_screen_size(handle):
+    """
+    Find the screen size of a previously written EDL file
+
+    Parameters
+    ----------
+    handle : file-like object
+        EDL path to read screen size
+
+    Returns
+    -------
+    dimensions : tuple
+        Width and height of screen
+
+    Raises
+    ------
+    ValueError:
+        Raised if no screen information is found
+    """
+    #Compile overall screen regex match
+    tpl = re.compile(r'beginScreenProperties(?:.+)'
+                      'w (\d+)\nh (\d+)'
+                      '(?:.+)endScreenProperties',
+                      flags=re.DOTALL)
+    #Search for screen properties in file
+    with handle as f:
+
+        props = tpl.search(f.read())
+
+    if not props:
+        raise ValueError("No screen dimension information "
+                         "found within file")
+
+    return tuple(int(d) for d in props.groups())
