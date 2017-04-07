@@ -530,3 +530,102 @@ def find_screen_size(handle):
                          "found within file")
 
     return tuple(int(d) for d in props.groups())
+
+
+class LocalPv(object):
+    """
+    Representation of local EDM Pv
+
+    These PVs are internal to EDM, include the ```LOC\prefix`` and can be of
+    type ``float``, ``int`` or ``string``. EDM creates a local PV the first
+    time it is encountered. If types or values differ between the two
+    declarations, the first one wins.
+    
+    Parameters
+    ----------
+    name : str
+        Name of PV to be instantiated
+
+    value : int, float, list, or str, optional
+        Default value of LocalPV 
+    
+    Raises
+    ------
+    TypeError:
+        If the value is of an supporte type
+    """
+    pv_types = {str : 's', int : 'i', float : 'd'}
+
+    def __init__(self, name, value=None):
+
+        if type(value) not in self.pv_types:
+            raise TypeError("Not a valid local PV "
+                            "type for {}".format(value))
+
+        #PV Information
+        self.name  = name
+        self.value = value
+
+
+    @property
+    def declaration(self):
+        """
+        Tag for the local PV
+        """
+        name = 'LOC\\{}'.format(self.name)
+
+        if self.value:
+            name += '={}:{}'.format(self.pv_types[type(self.value)],
+                                    self.value)
+
+        return name
+
+
+    def __str__(self):
+        return self.declaration
+
+
+class LocalEnumPv(LocalPv):
+    """
+    Representation of Local EnumPV
+
+    Compared to other Enum types, local Enum Pvs are slightly more complex as
+    you can specify a number of states and then select one to be the default
+    value upon instantiation. Instead of using an Enum to represent this in
+    Python, a list of states is given, and one is specified as the default
+    value
+
+    Parameters
+    ----------
+    name : str
+        Name of PV to be instantiated
+
+    states : list
+        Possible states for enum PV
+
+    value : str, optional
+        Name of state to instantiate Enum with. By default, the first state is
+        taken
+    """
+    pv_types = {int : 'e', list : 'e'}
+
+    def __init__(self, name, states, value=None):
+        self.states = states
+
+        #Grab index of default
+        if not value:
+            value = 0
+        else:
+            value = states.index(value)
+
+        super(LocalEnumPv, self).__init__(name, value)
+
+
+    @property
+    def declaration(self):
+        """
+        Tag to declare the local PV
+        """
+        return super().declaration + ',' + ','.join(self.states)
+
+
