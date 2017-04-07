@@ -12,7 +12,7 @@ from six import StringIO
 ##########
 # Module #
 ##########
-from pedl.utils import find_screen_size
+from pedl.utils import LocalPv, LocalEnumPv, find_screen_size
 
 
 def test_find_screen_size():
@@ -28,3 +28,14 @@ def test_find_screen_size():
 
     with pytest.raises(ValueError):
         find_screen_size(f)
+
+def test_local_pv():
+    pv = LocalPv('stringPv', 'this is a string')
+    assert str(pv) == 'LOC\\stringPv=s:this is a string'
+
+    with pytest.raises(TypeError):
+        pv = LocalPv('fail', dict())
+
+def test_local_enum():
+    pv = LocalEnumPv('enumPv', ['zero','one','two'], value='two')
+    assert str(pv) == 'LOC\\enumPv=e:2,zero,one,two'
