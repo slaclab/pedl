@@ -1,0 +1,26 @@
+{% extends 'widget.edl' %}
+{% block properties %}
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "{{widget.controlPv}}"
+sizeOfs 99
+numDsps {{widget.count}}
+displayFileName {
+{% for display in widget.displays %}
+  {{loop.index0}} "{{display.path}}"
+{% endfor %}
+}
+menuLabel {
+{% for display in widget.displays %}
+  {{loop.index0}} "{{display.name}}"
+{% endfor %}
+}
+symbols {
+{% for display in widget.displays %}
+  {{loop.index0}} "{{display.macros}}"
+{% endfor %}
+}
+{% endblock %}
