@@ -168,7 +168,7 @@ class Widget(PedlObject):
 
     Besides spatial attributes, the base Widget class also contains the colorPV
     and visibility attributes. These are present because they are common to all
-    widgets in EDM,  :attr:`.visibility` controls the settings for the
+    widgets in EDM,  :attr:`.Widget.visibility` controls the settings for the
     visibility PV and associated display range, and :attr:`.alarmPv` allows the
     widget to display changes of state as specific alarm colors
 
@@ -244,10 +244,10 @@ class MainWindow(PedlObject):
     #PEDL properties
     background = pedlproperty(ColorChoice, default=ColorChoice.Grey,
                               doc='Background color of the EDM screen ' 
-                                   'as a :class:`.ColorChoice')
+                                   'as a :class:`.ColorChoice`')
     foreground = pedlproperty(ColorChoice, default=ColorChoice.Black,
                               doc='Foreground color of the EDM screen ' 
-                                   'as a :class:`.ColorChoice')
+                                   'as a :class:`.ColorChoice`')
 
     #Change default settings
     w = copy(PedlObject.w)

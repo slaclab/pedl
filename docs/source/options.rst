@@ -14,9 +14,17 @@ Visibility
 .. autoclass:: pedl.utils.Visibility
    :members:
 
+Local Process Variables
+-----------------------
+.. autoclass:: pedl.utils.LocalPv
+   :members:
+
+.. autoclass:: pedl.utils.LocalEnumPv
+   :members:
 
 Choices
 +++++++
 .. automodule:: pedl.choices
    :members:
    :undoc-members:
+

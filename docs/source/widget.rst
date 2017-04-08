@@ -9,6 +9,11 @@ Base Widget
    :members:
    :inherited-members:
 
+Basic Window
+------------
+.. autoclass:: pedl.MainWindow
+   :members:
+   :show-inheritance:
 
 Shapes
 ------
@@ -19,14 +24,20 @@ Shapes
    :show-inheritance:
 
 
-.. autoclass:: pedl.Rectangle
+.. autoclass:: pedl.widgets.Rectangle
    :show-inheritance:
 
-.. autoclass:: pedl.Circle
+.. autoclass:: pedl.widgets.Circle
    :show-inheritance:
 
 Static Text
 -----------
 .. autoclass:: pedl.widgets.StaticText
+   :members:
+   :show-inheritance:
+
+EmbeddedWindow
+--------------
+.. autoclass:: pedl.widgets.EmbeddedWindow
    :members:
    :show-inheritance:
