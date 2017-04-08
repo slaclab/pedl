@@ -574,7 +574,7 @@ class LocalPv(object):
         """
         name = 'LOC\\{}'.format(self.name)
 
-        if self.value:
+        if self.value is not None:
             name += '={}:{}'.format(self.pv_types[type(self.value)],
                                     self.value)
 
