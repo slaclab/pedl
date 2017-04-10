@@ -38,6 +38,14 @@ def test_message_buttonize():
     assert l.widgets[1].w == 50
     assert l.widgets[1].h == 75
 
+def test_stack_layout_buttonize():
+    w = pedl.Widget(w=50,h=75)
+    l = pedl.StackedLayout()
+    l.addWidget(w)
+    pedl.widgets.MessageButton.buttonize(l)
+    assert len(l.widgets) == 2
+    assert isinstance(l.widgets[0], pedl.widgets.MessageButton)
+
 def test_menu_buttonize():
     w = pedl.Widget(w=50,h=75)
     l = pedl.widgets.MenuButton.buttonize(w, controlPv='PV:FAKE')

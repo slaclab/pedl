@@ -64,6 +64,11 @@ class Button(Shape):
         Create a :class:`.StackedLayout` that turns an existing widget into a
         button
 
+        For most cases a new :class:`.StackedLayout` is created with a button
+        placed at the bottom. However, if the object given to buttonize is
+        already a :class:`.StackedLayout` the button is simply placed on the
+        bottom and returned.
+
         Parameters
         ----------
         obj : :class:`.Widget` or :class:`.Layout`
@@ -86,15 +91,22 @@ class Button(Shape):
         if invisible:
             button.invisible = True
 
-        #Create Layout
-        l = StackedLayout()
+        #Add to existing stacked layout
+        if isinstance(obj, StackedLayout):
+            obj.insertWidget(0, button)
+            return obj
 
-        #Add Widgets
-        l.addWidget(button)
-        if isinstance(obj, Layout):
-            l.addLayout(obj)
         else:
-            l.addWidget(obj)
+            #Create Layout
+            l = StackedLayout()
+
+            #Add Widgets
+            l.addWidget(button)
+      
+            if isinstance(obj, Layout):
+                l.addLayout(obj)
+            else:
+                l.addWidget(obj)
 
         return l
 
@@ -161,6 +173,11 @@ class MenuButton(Button):
         """
         Create a :class:`.StackedLayout` that turns an existing widget into a
         button
+
+        For most cases a new :class:`.StackedLayout` is created with a button
+        placed at the bottom. However, if the object given to buttonize is
+        already a :class:`.StackedLayout` the button is simply placed on the
+        bottom and returned.
 
         Parameters
         ----------
