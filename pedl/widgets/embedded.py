@@ -6,7 +6,6 @@ EmbeddedWindow Widget
 ############
 import os
 import logging
-from collections import namedtuple
 
 ###############
 # Third Party #
@@ -21,10 +20,15 @@ from ..utils   import LocalPv, find_screen_size, pedlproperty
 
 logger = logging.getLogger(__name__)
 
-class Display(namedtuple('Display', ['name', 'path', 'macros'])):
+class Display(object):
     """
     Data structure to represent Embedded Display
     """
+    def __init__(self, name, path, macros):
+        self.name   = name
+        self.path   = path
+        self.macros = macros
+    
     @classmethod
     def from_edl(cls, edl):
         """
