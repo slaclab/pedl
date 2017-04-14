@@ -2,9 +2,12 @@ import pedl
 import pytest
 
 def test_add_objects():
+    p   = pedl.Widget()
+
     l   = pedl.layout.Layout()
     c_l = pedl.layout.Layout()
-    p   = pedl.Widget()
+    c_l.widgets = [p]
+
     #Test Widget
     l.addWidget(p)
     assert l.widgets == [p]
@@ -16,6 +19,9 @@ def test_add_objects():
     assert l.widgets == [p,c_l]
     with pytest.raises(TypeError):
         l.addLayout(4)
+
+    with pytest.raises(ValueError):
+        l.addLayout(pedl.layout.Layout())
 
 def test_spacing():
     l  = pedl.layout.Layout()
@@ -31,6 +37,10 @@ def test_alignment():
 
 def test_horizontal_layout():
     l = pedl.HBoxLayout()
+    
+    assert l.w == 0
+    assert l.h == 0
+
     l.addWidget(pedl.Widget(w=50,  h=100))
     l.addWidget(pedl.Widget(w=100, h=50))
     l.addWidget(pedl.Widget(w=100, h=100))
@@ -87,6 +97,9 @@ def test_horizontal_layout():
     assert l.widgets[2].y == 150
     assert l.h            == 100
 
+    assert l.x == 100
+    assert l.y == 150
+
 def test_vertical_layout():
     l = pedl.VBoxLayout()
     l.addWidget(pedl.Widget(w=50,  h=100))
@@ -135,15 +148,18 @@ def test_vertical_layout():
     l.x = 100
     l.y = 150
 
-    assert l.widgets[0].x == 100
-    assert l.widgets[1].x == 50
-    assert l.widgets[2].x == 50
+    assert l.widgets[0].x == 150
+    assert l.widgets[1].x == 100
+    assert l.widgets[2].x == 100
     assert l.w            == 100
 
     assert l.widgets[0].y == 150
     assert l.widgets[1].y == 260
     assert l.widgets[2].y == 320
     assert l.h            == 270
+    
+    assert l.x == 100
+    assert l.y == 150
 
 def test_stack_layout():
     l = pedl.StackedLayout()
@@ -225,15 +241,18 @@ def test_stack_layout():
     l.x = 100
     l.y = 150
 
-    assert l.widgets[0].x == 100
-    assert l.widgets[1].x == 50
-    assert l.widgets[2].x == 50
+    assert l.widgets[0].x == 150
+    assert l.widgets[1].x == 100
+    assert l.widgets[2].x == 100
     assert l.w            == 100
 
     assert l.widgets[0].y == 150
     assert l.widgets[1].y == 150
     assert l.widgets[2].y == 150
     assert l.h            == 100
+    
+    assert l.x == 100
+    assert l.y == 150
 
 def test_compound_layout():
     h  = pedl.HBoxLayout()

@@ -42,8 +42,8 @@ class Layout(PedlObject):
     y : int, optional
         Starting Y position of the layout
     """
-    x = copy.copy(PedlObject.x)
-    y = copy.copy(PedlObject.y)
+#    x = copy.copy(PedlObject.x)
+#    y = copy.copy(PedlObject.y)
 
     spacing   = pedlproperty(int, default=5,  doc='Spacing between widgets')
     alignment = pedlproperty(AlignmentChoice, doc='Alignment of Layout')
@@ -58,8 +58,10 @@ class Layout(PedlObject):
         """
         Width of the layout
         """
-        return (max([w.right for w in self.widgets]) 
-              - min([w.x     for w in self.widgets]))
+        if not self.widgets:
+            return 0
+
+        return (max([w.right for w in self.widgets]) - self.x)
 
 
     @property
@@ -67,25 +69,51 @@ class Layout(PedlObject):
         """
         Height of the layout
         """
-        return (max([w.bottom for w in self.widgets])
-              - min([w.y      for w in self.widgets]))
+        if not self.widgets:
+            return 0
 
-    @x.callback
+        return (max([w.bottom for w in self.widgets]) - self.y)
+
+
+    @property
     def x(self):
-        if self.widgets:
-            #Move first widget
-            self.widgets[0].x = self.x
-            #Rearrange following widgets
-            self.shuffle()
+        if not self.widgets:
+            return 0
+
+        return min([w.x for w in self.widgets])
 
 
-    @y.callback
+    @property
     def y(self):
+        if not self.widgets:
+            return 0
+
+        return min([w.y for w in self.widgets])
+
+
+    @x.setter
+    def x(self, x):
         if self.widgets:
-            #Move first widget
-            self.widgets[0].y = self.y
+            #Find left most widget
+            shift = x - self.x
+            for w in self.widgets:
+                w.x += shift
+            #self.widgets[0].x = self.x
             #Rearrange following widgets
-            self.shuffle()
+            #self.shuffle()
+
+
+    @y.setter
+    def y(self, y):
+        if self.widgets:
+            #Find left most widget
+            shift = y - self.y
+            for w in self.widgets:
+                w.y += shift
+            #Move first widget
+            #self.widgets[0].y = self.y
+            #Rearrange following widgets
+            #self.shuffle()
 
 
     @alignment.callback
@@ -151,6 +179,9 @@ class Layout(PedlObject):
         """
         if not isinstance(layout, Layout):
             raise TypeError('Must be an EDM Layout')
+
+        if not len(layout.widgets) > 0:
+            raise ValueError("Can not add an empty Layout")
 
         #Note as child layout
         layout.parent = self
