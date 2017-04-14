@@ -35,15 +35,15 @@ class StaticText(Widget):
     minor   = 1
     release = 1
     template   = 'text.edl'
-   
-    
+
+
     text      = pedlproperty(str, default='', doc='Text inside the label')
     fill      = pedlproperty(ColorChoice, doc='Background fill in the widget')
     linewidth = pedlproperty(int, default=0.,  doc='Stroke of surrounding border')
     alignment = pedlproperty(AlignmentChoice, default=AlignmentChoice.Center,
                              doc='Alignment of text within the widget')
-    fontColor = pedlproperty(int, default=ColorChoice.Black,
+    fontColor = pedlproperty(ColorChoice, default=ColorChoice.Black,
                              doc='Color of the font inside the button')
-   
+
     font = pedlproperty(Font.is_font, default=Font(size=12),
                         doc= 'Font as indicated by :class:`.Font`')
