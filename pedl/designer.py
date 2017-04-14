@@ -16,6 +16,9 @@ one, use :meth:`.setLayout` to apply your pattern to the screen.
 ####################
 import os
 import sys
+import time
+import atexit
+import os.path
 import logging
 import tempfile
 
@@ -55,11 +58,17 @@ class Designer:
 
     env : ``jinja2.Environment``
         Environment used to render templates
+
+    processes : list
+        Tuples of temporary files and processes spawned by the Designer
     """
     def __init__(self, template_dir=None):
 
-        self.window  = MainWindow(parent=self)
-        self.widgets = list()
+        self.window    = MainWindow(parent=self)
+        self.widgets   = list()
+        #Handle spawned processes 
+        self.processes = list()
+        atexit.register(Designer.closeAllWindows, self)
 
         #Load specified template directory
         if template_dir:
@@ -185,9 +194,15 @@ class Designer:
         proc : ``subprocess.Popen``
             Process containing EDM launch
         """
-        with tempfile.NamedTemporaryFile(mode='w+', suffix='.edl') as temp:
+        ftmp = tempfile.NamedTemporaryFile(mode='w+', delete=False, suffix='.edl')
+        #Write to temporary disk
+        with ftmp as temp:
             self.dump(temp)
-            return launch(temp.name, wd=wd, wait=wait ,**kwargs)
+        #Launch subprocess
+        proc = launch(ftmp.name, wd=wd, wait=wait ,**kwargs)
+        #Add to list to be removed
+        self.processes.append((ftmp,proc))
+        return proc
 
 
     def dump(self, handle):
@@ -212,3 +227,11 @@ class Designer:
         handle.write('\n\n'.join(edl))
         handle.flush()
 
+
+    def closeAllWindows(self):
+        """
+        Close all the registered processes
+        """
+        for tmp, proc in self.processes:
+            proc.kill()
+            os.remove(tmp.name)
