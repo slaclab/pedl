@@ -62,7 +62,7 @@ bgColor index 0
 topShadowColor index 0
 botShadowColor index 14
 displaySource "menu"
-filePv "LOC\\emb-window=i:0"
+filePv "LOC\\\\emb-window=i:0"
 sizeOfs 99
 numDsps 1
 displayFileName {
@@ -74,4 +74,5 @@ menuLabel {
 symbols {
   0 "None"
 }
+noScroll
 endObjectProperties'''
