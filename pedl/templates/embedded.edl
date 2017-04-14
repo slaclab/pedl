@@ -23,4 +23,5 @@ symbols {
   {{loop.index0}} "{{display.macros}}"
 {% endfor %}
 }
+noScroll
 {% endblock %}
