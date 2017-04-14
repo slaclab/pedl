@@ -6,6 +6,7 @@ PEDL Utilities
 ############
 import os
 import re
+import sys
 import math
 import copy
 import logging
@@ -572,7 +573,7 @@ class LocalPv(object):
         """
         Tag for the local PV
         """
-        name = 'LOC\\{}'.format(self.name)
+        name = 'LOC\\\\{}'.format(self.name)
 
         if self.value is not None:
             name += '={}:{}'.format(self.pv_types[type(self.value)],
@@ -627,5 +628,3 @@ class LocalEnumPv(LocalPv):
         Tag to declare the local PV
         """
         return super().declaration + ',' + ','.join(self.states)
-
-
