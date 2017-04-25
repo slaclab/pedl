@@ -1,0 +1,15 @@
+{%extends 'shape.edl' %}
+{% block properties %}
+closePolygon
+numPoints {{widget.numPoints}}
+xPoints {
+{% for point in widget.points %}
+    {{loop.index0}} {{point[0]}}
+{% endfor %}
+}
+yPoints {
+{% for point in widget.points %}
+    {{loop.index0}} {{point[1]}}
+{% endfor %}
+}
+{% endblock %}

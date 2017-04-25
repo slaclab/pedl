@@ -22,3 +22,25 @@ def test_line_width():
     widget = pedl.widgets.shape.Shape()
     widget.lineWidth = 4
     assert widget.lineWidth == 4
+
+
+def test_lines_widget():
+    v = pedl.widgets.shape.Lines(points=[(0,0),(5,0),(5,10),(0,10),(0,0)])
+    assert v.x == 0
+    assert v.y == 0
+    assert v.w == 5
+    assert v.h == 10
+
+    v.w = 10
+    assert v.x == 0
+    assert v.y == 0
+    assert v.w == 10
+    assert v.h == 10
+
+    v.x = 15
+    v.y = 25
+    assert v.x == 15
+    assert v.y == 25
+    assert v.w == 10
+    assert v.h == 10
+
