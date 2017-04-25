@@ -98,9 +98,6 @@ class Layout(PedlObject):
             shift = x - self.x
             for w in self.widgets:
                 w.x += shift
-            #self.widgets[0].x = self.x
-            #Rearrange following widgets
-            #self.shuffle()
 
 
     @y.setter
@@ -110,10 +107,6 @@ class Layout(PedlObject):
             shift = y - self.y
             for w in self.widgets:
                 w.y += shift
-            #Move first widget
-            #self.widgets[0].y = self.y
-            #Rearrange following widgets
-            #self.shuffle()
 
 
     @alignment.callback
