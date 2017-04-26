@@ -135,7 +135,7 @@ class EmbeddedWindow(Widget):
         display : str or :class:`.Display`
             String of filepath or complete Display object
         """
-        self.insertDisplay(-1, display)
+        self.insertDisplay(self.count, display)
 
 
     def resize(self):
