@@ -147,8 +147,8 @@ class Stopper(Lines):
 
 class Camera(Lines): 
     points = copy(Lines.points)
-    points.default = [(0,4),(4,4),(4,2),(6,4),
-                      (6,0),(4,2),(4,0),(0,0)]
+    points.default = [(0,0),(4,0),(2,2),(4,2),
+                      (4,6),(0,6),(0,2),(2,2)]
 
 class Circle(Shape):
     widgetClass = 'activeCircleClass'
