@@ -1,0 +1,15 @@
+{% extends 'button.edl' %}
+{% block button %}
+buttonLabel "{{widget.label}}"
+numCmds {{widget.numCommands}}
+commandLabel {
+{% for cmd in widget.commands %}
+  {{loop.index0}} "{{cmd.name}}"
+{% endfor %}
+}
+command {
+{% for cmd in widget.commands %}
+  {{loop.index0}} "{{cmd.command}}"
+{% endfor %}
+}
+{% endblock %}

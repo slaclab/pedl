@@ -1,5 +1,14 @@
-{% extends 'button.edl' %}
-{% block button %}
+{% extends 'widget.edl' %}
+{% block properties %}
+fgColor index {{widget.fontColor.value}}
+onColor index {{widget.fill.value}}
+offColor index {{widget.fill.value}}
+topShadowColor index {{widget.lineColor.value}}
+botShadowColor index {{widget.lineColor.value}}
+{% if widget.invisible %}invisible
+{% endif %}
+font {{widget.font.tag}}
+controlPv {{widget.controlPv}}
 pressValue {{widget.value}}
 onLabel {{widget.label}}
 offLabel {{widget.label}}

@@ -1,0 +1,21 @@
+{% extends 'button.edl' %}
+{% block button %}
+buttonLabel "{{widget.label}}"
+numPvs 4
+numDsps {{widget.numDisplays}}
+displayFileName {
+{% for display in widget.displays %}
+  {{loop.index0}} "{{display.path}}"
+{% endfor %}
+}
+menuLabel {
+{% for display in widget.displays %}
+  {{loop.index0}} "{{display.name}}"
+{% endfor %}
+}
+symbols {
+{% for display in widget.displays %}
+  {{loop.index0}} "{{display.macros}}"
+{% endfor %}
+}
+{% endblock %}

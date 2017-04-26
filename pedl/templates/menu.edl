@@ -1,0 +1,5 @@
+{% extends 'button.edl' %}
+{% block button %}
+inconsistentColor index {{widget.fill.value}}
+controlPv {{widget.controlPv}}
+{% endblock %}

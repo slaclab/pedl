@@ -1,20 +1,9 @@
 {% extends 'widget.edl' %}
 {% block properties %}
 fgColor index {{widget.fontColor.value}}
-{% if widget.widgetClass != 'activeMessageButtonClass' %}
 bgColor index {{widget.fill.value}}
-{% else %}
-onColor index {{widget.fill.value}}
-offColor index {{widget.fill.value}}
-{% endif %}
 topShadowColor index {{widget.lineColor.value}}
 botShadowColor index {{widget.lineColor.value}}
-{% if widget.widgetClass == 'activeMenuButtonClass' %}
-inconsistentColor index {{widget.fill.value}}
-{% endif %}
 font {{widget.font.tag}}
-{% if widget.invisible %}invisible
-{% endif %}
-controlPv {{widget.controlPv}}
 {% block button %}{% endblock button%}
 {% endblock %}
