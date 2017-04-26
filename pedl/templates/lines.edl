@@ -1,5 +1,5 @@
 {%extends 'shape.edl' %}
-{% block properties %}
+{% block lines %}
 closePolygon
 numPoints {{widget.numPoints}}
 xPoints {

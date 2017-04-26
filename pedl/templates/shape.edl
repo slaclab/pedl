@@ -8,4 +8,5 @@ fillAlarm
 {% endif %}
 lineWidth {{widget.lineWidth}}
 lineColor index {{widget.lineColor.value}}
+{% block lines %}{% endblock %}
 {% endblock %}
