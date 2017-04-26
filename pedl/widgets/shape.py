@@ -110,11 +110,11 @@ class Lines(Shape):
             #Keep track of starting position
             x = self.x
             #Scale widgets
-            scale = w // self.w
-            self.points = [(p[0]*scale, p[1]) for p in self.points]
+            scale     = w / self.w
+            self.points = [(round(p[0]*scale), p[1]) for p in self.points]
             #Reset widget to starting position
             self.x = x
-   
+
 
     @h.setter
     def h(self, h):
@@ -122,8 +122,8 @@ class Lines(Shape):
             #Keep track of starting position
             y = self.y
             #Scale widgets
-            scale = h // self.h
-            self.points = [(p[0], p[1]*scale) for p in self.points]
+            scale = h / self.h
+            self.points = [(p[0], round(p[1]*scale)) for p in self.points]
             #Reset widget to starting position
             self.y = y
 

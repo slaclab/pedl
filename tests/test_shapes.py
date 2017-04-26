@@ -32,15 +32,16 @@ def test_lines_widget():
     assert v.h == 10
 
     v.w = 10
+    v.h = 25
     assert v.x == 0
     assert v.y == 0
     assert v.w == 10
-    assert v.h == 10
+    assert v.h == 25
 
     v.x = 15
     v.y = 25
     assert v.x == 15
     assert v.y == 25
     assert v.w == 10
-    assert v.h == 10
+    assert v.h == 25
 
